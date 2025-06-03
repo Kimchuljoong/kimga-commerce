@@ -3,12 +3,14 @@ package kr.co.kimga.member
 import io.mockk.every
 import io.mockk.mockk
 import kr.co.kimga.member.domain.dto.CreateMemberRequestDto
+import kr.co.kimga.member.domain.dto.ModifyMemberRequestDto
 import kr.co.kimga.member.domain.entity.Member
 import kr.co.kimga.member.domain.exception.MemberDuplicatedException
 import kr.co.kimga.member.domain.service.MemberService
 import kr.co.kimga.member.infrastructure.repository.MemberJpaRepository
 import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.*
+import java.util.*
 import kotlin.test.assertEquals
 
 class MemberServiceTest{
@@ -110,7 +112,7 @@ class MemberServiceTest{
     fun `can modify member info`() {
         val modifyName = "modify_name"
         // given
-        val modifyMemberRequestDto = ModifyMemberRequestDto(modifyName);
+        val modifyMemberRequestDto = ModifyMemberRequestDto(1, modifyName);
 
         val fakeModifiedMember = Member(
             id = 1,
@@ -119,7 +121,7 @@ class MemberServiceTest{
             name = modifyName
         )
 
-        every { memberRepository.save(any()) } returns fakeModifiedMember
+        every { memberRepository.findById(any()) } returns Optional.of(fakeModifiedMember)
 
         // when
         val modifiedMember = memberService.modify(modifyMemberRequestDto)
