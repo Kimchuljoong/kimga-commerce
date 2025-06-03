@@ -7,11 +7,11 @@ import jakarta.validation.constraints.Size
 import kr.co.kimga.member.domain.entity.Member
 
 data class CreateMemberRequestDto(
+
     @field:NotBlank(message = "이메일은 필수 입니다")
     @field:Email(message = "이메일 형식이 올바르지 않습니다")
     val email: String,
 
-    @field:NotBlank(message = "비밀번호는 필수 입니다")
     @field:Size(min = 10, message = "비밀번호는 10자 이상 이어야 합니다")
     @field:Size(max = 15, message = "비밀번호는 15자를 초과할 수 없습니다")
     @field:Pattern(
@@ -20,8 +20,7 @@ data class CreateMemberRequestDto(
     )
     val password: String,
 
-    @field:NotBlank(message = "이름은 비워둘 수 없습니다")
-    @field:Size(min = 2, message = "이름은 최소 2글자 이상 작성해야 합니다")
+    @field:Size(min = 2, message = "이름은 2글자 이상 작성해야 합니다")
     val name: String
 
 ) {

@@ -36,14 +36,6 @@ class MemberServiceTest {
         assertThat(entity.id).isNull()
     }
 
-    @Test
-    @DisplayName("CreateMemberRequestDto Validation을 확인한다")
-    fun `validate CreateMemberRequestDto`() {
-        // given
 
-        // when
-
-        // then
-    }
 
 }
