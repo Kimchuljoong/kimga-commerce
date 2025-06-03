@@ -1,7 +1,7 @@
 ## Kimga E-Commerce Order Service
 
 ### 모듈
-1. user(회원) Todo
+1. member(회원) In Develop
 2. order(주문) Todo
 3. coupon(쿠폰) Todo
 4. common(공통) Todo
