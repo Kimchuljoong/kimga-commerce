@@ -3,15 +3,14 @@ package kr.co.kimga.member
 import io.mockk.every
 import io.mockk.mockk
 import kr.co.kimga.member.domain.dto.CreateMemberRequestDto
+import kr.co.kimga.member.domain.dto.ModifyMemberRequestDto
 import kr.co.kimga.member.domain.entity.Member
 import kr.co.kimga.member.domain.exception.MemberDuplicatedException
 import kr.co.kimga.member.domain.service.MemberService
 import kr.co.kimga.member.infrastructure.repository.MemberJpaRepository
 import org.assertj.core.api.Assertions.*
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.DisplayName
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.api.*
+import java.util.*
 import kotlin.test.assertEquals
 
 class MemberServiceTest{
@@ -19,9 +18,9 @@ class MemberServiceTest{
     private lateinit var memberRepository: MemberJpaRepository
     private lateinit var memberService: MemberService
 
-    val email = "test@test.com"
-    val password = "abcd1234!@#$"
-    val name = "tester"
+    private val email = "test@test.com"
+    private val password = "abcd1234!@#$"
+    private val name = "tester"
 
     @BeforeEach
     fun setUp() {
@@ -108,7 +107,28 @@ class MemberServiceTest{
         }
     }
 
+    @Test
+    @DisplayName("회원 정보를 수정할 수 있다")
+    fun `can modify member info`() {
+        val modifyName = "modify_name"
+        // given
+        val modifyMemberRequestDto = ModifyMemberRequestDto(1, modifyName);
 
+        val fakeModifiedMember = Member(
+            id = 1,
+            email = email,
+            password = password,
+            name = modifyName
+        )
 
+        every { memberRepository.findById(any()) } returns Optional.of(fakeModifiedMember)
+
+        // when
+        val modifiedMember = memberService.modify(modifyMemberRequestDto)
+
+        // then
+        assertNotNull(modifiedMember)
+        assertEquals(modifyName, modifiedMember.name)
+    }
 
 }

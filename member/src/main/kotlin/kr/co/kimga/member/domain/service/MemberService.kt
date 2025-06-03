@@ -2,8 +2,11 @@ package kr.co.kimga.member.domain.service
 
 import kr.co.kimga.member.domain.dto.CreateMemberRequestDto
 import kr.co.kimga.member.domain.dto.CreatedMemberDto
+import kr.co.kimga.member.domain.dto.ModifiedMemberDto
+import kr.co.kimga.member.domain.dto.ModifyMemberRequestDto
 import kr.co.kimga.member.domain.entity.Member
 import kr.co.kimga.member.domain.exception.MemberDuplicatedException
+import kr.co.kimga.member.domain.exception.MemberNotFoundException
 import kr.co.kimga.member.infrastructure.repository.MemberJpaRepository
 import lombok.RequiredArgsConstructor
 import org.springframework.stereotype.Service
@@ -12,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 @RequiredArgsConstructor
 class MemberService (
-    val memberJpaRepository: MemberJpaRepository
+    val memberRepository: MemberJpaRepository
 ) {
 
     @Transactional
@@ -21,14 +24,23 @@ class MemberService (
 
         validateDuplicateMemberByEmail(createRequest)
 
-        val createdMember = memberJpaRepository.save(createRequest)
+        val createdMember = memberRepository.save(createRequest)
         return CreatedMemberDto.from(createdMember)
 
     }
 
     private fun validateDuplicateMemberByEmail(createRequest: Member) {
-        if (memberJpaRepository.existsByEmail(createRequest.email)) {
+        if (memberRepository.existsByEmail(createRequest.email)) {
             throw MemberDuplicatedException("이미 가입한 이메일 입니다")
         }
+    }
+
+    @Transactional
+    fun modify(modifyMemberRequestDto: ModifyMemberRequestDto) : ModifiedMemberDto {
+        val member = memberRepository.findById(modifyMemberRequestDto.id)
+            .orElseThrow { MemberNotFoundException() }
+
+        member.modify(modifyMemberRequestDto)
+        return ModifiedMemberDto.from(member)
     }
 }
