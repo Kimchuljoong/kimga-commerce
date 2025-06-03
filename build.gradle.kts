@@ -38,10 +38,12 @@ subprojects {
 
 	dependencies {
 		implementation("org.springframework.boot:spring-boot-starter-data-redis")
+		implementation("org.springframework.boot:spring-boot-starter-validation")
 		implementation("org.jetbrains.kotlin:kotlin-reflect")
 		implementation("org.springframework.kafka:spring-kafka")
 		compileOnly("org.projectlombok:lombok")
 		annotationProcessor("org.projectlombok:lombok")
+		testImplementation("io.mockk:mockk:1.13.10")
 		testImplementation("org.springframework.boot:spring-boot-starter-test")
 		testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
 		testImplementation("org.springframework.kafka:spring-kafka-test")
@@ -52,12 +54,6 @@ subprojects {
 		compilerOptions {
 			freeCompilerArgs.addAll("-Xjsr305=strict")
 		}
-	}
-
-	allOpen {
-		annotation("jakarta.persistence.Entity")
-		annotation("jakarta.persistence.MappedSuperclass")
-		annotation("jakarta.persistence.Embeddable")
 	}
 
 	tasks.withType<Test> {

@@ -5,7 +5,7 @@ rootProject.name = "commerce"
 
 include(
     "db",
-    "member"
+    "member",
+    "order",
+    "coupon"
 )
-include("order")
-include("coupon")
