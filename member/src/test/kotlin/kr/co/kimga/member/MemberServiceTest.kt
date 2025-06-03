@@ -18,9 +18,9 @@ class MemberServiceTest{
     private lateinit var memberRepository: MemberJpaRepository
     private lateinit var memberService: MemberService
 
-    val email = "test@test.com"
-    val password = "abcd1234!@#$"
-    val name = "tester"
+    private val email = "test@test.com"
+    private val password = "abcd1234!@#$"
+    private val name = "tester"
 
     @BeforeEach
     fun setUp() {
@@ -130,6 +130,5 @@ class MemberServiceTest{
         assertNotNull(modifiedMember)
         assertEquals(modifyName, modifiedMember.name)
     }
-
 
 }

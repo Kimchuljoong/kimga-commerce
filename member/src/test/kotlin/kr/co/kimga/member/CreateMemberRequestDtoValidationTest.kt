@@ -14,9 +14,9 @@ class CreateMemberRequestDtoValidationTest {
 
     private lateinit var validator: Validator
 
-    val email = "test@gmail.com"
-    val password = "abcd1234!@#$"
-    val name = "test"
+    private val email = "test@gmail.com"
+    private val password = "abcd1234!@#$"
+    private val name = "test"
 
     @BeforeEach
     fun setUp() {
