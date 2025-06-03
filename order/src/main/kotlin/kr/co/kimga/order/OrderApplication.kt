@@ -1,11 +1,11 @@
-package kr.co.kimga.commerce
+package kr.co.kimga.order
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-class CommerceApplication
+class OrderApplication
 
 fun main(args: Array<String>) {
-	runApplication<CommerceApplication>(*args)
+    runApplication<OrderApplication>(*args)
 }
