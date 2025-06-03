@@ -8,10 +8,7 @@ import kr.co.kimga.member.domain.exception.MemberDuplicatedException
 import kr.co.kimga.member.domain.service.MemberService
 import kr.co.kimga.member.infrastructure.repository.MemberJpaRepository
 import org.assertj.core.api.Assertions.*
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.DisplayName
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.api.*
 import kotlin.test.assertEquals
 
 class MemberServiceTest{
@@ -108,7 +105,29 @@ class MemberServiceTest{
         }
     }
 
+    @Test
+    @DisplayName("회원 정보를 수정할 수 있다")
+    fun `can modify member info`() {
+        val modifyName = "modify_name"
+        // given
+        val modifyMemberRequestDto = ModifyMemberRequestDto(modifyName);
 
+        val fakeModifiedMember = Member(
+            id = 1,
+            email = email,
+            password = password,
+            name = modifyName
+        )
+
+        every { memberRepository.save(any()) } returns fakeModifiedMember
+
+        // when
+        val modifiedMember = memberService.modify(modifyMemberRequestDto)
+
+        // then
+        assertNotNull(modifiedMember)
+        assertEquals(modifyName, modifiedMember.name)
+    }
 
 
 }
