@@ -4,6 +4,7 @@ import io.mockk.every
 import io.mockk.mockk
 import kr.co.kimga.member.domain.dto.CreateMemberRequestDto
 import kr.co.kimga.member.domain.dto.ModifyMemberRequestDto
+import kr.co.kimga.member.domain.dto.WithdrawMemberRequestDto
 import kr.co.kimga.member.domain.entity.Member
 import kr.co.kimga.member.domain.exception.MemberDuplicatedException
 import kr.co.kimga.member.domain.service.MemberService
@@ -129,6 +130,26 @@ class MemberServiceTest{
         // then
         assertNotNull(modifiedMember)
         assertEquals(modifyName, modifiedMember.name)
+    }
+
+    @Test
+    @DisplayName("회원 탈퇴를 할 수 있다")
+    fun `can withdraw member`() {
+
+        // given
+        val withdrawMemberRequestDto = WithdrawMemberRequestDto(1)
+        val fakeMember = Member(1, email, password, name)
+
+        every { memberRepository.findById(any()) } returns Optional.of(fakeMember)
+
+        // when
+        val withdrawResult = memberService.withDraw(withdrawMemberRequestDto)
+
+        // then
+        assertEquals(true, fakeMember.withdrawYn)
+        assertNotNull(fakeMember.withdrawAt)
+        assertNotNull(withdrawResult.withdrawDate)
+        assertEquals(fakeMember.withdrawAt, withdrawResult.withdrawDate)
     }
 
 }

@@ -1,9 +1,6 @@
 package kr.co.kimga.member.domain.service
 
-import kr.co.kimga.member.domain.dto.CreateMemberRequestDto
-import kr.co.kimga.member.domain.dto.CreatedMemberDto
-import kr.co.kimga.member.domain.dto.ModifiedMemberDto
-import kr.co.kimga.member.domain.dto.ModifyMemberRequestDto
+import kr.co.kimga.member.domain.dto.*
 import kr.co.kimga.member.domain.entity.Member
 import kr.co.kimga.member.domain.exception.MemberDuplicatedException
 import kr.co.kimga.member.domain.exception.MemberNotFoundException
@@ -42,5 +39,12 @@ class MemberService (
 
         member.modify(modifyMemberRequestDto)
         return ModifiedMemberDto.from(member)
+    }
+
+    fun withDraw(withdrawMemberRequestDto: WithdrawMemberRequestDto): WithdrawMemberDto {
+        val member = memberRepository.findById(withdrawMemberRequestDto.id)
+            .orElseThrow { MemberNotFoundException() }
+        member.withdrawal()
+        return WithdrawMemberDto.from(member)
     }
 }

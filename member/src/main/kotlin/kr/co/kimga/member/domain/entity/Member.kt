@@ -5,6 +5,7 @@ import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import kr.co.kimga.member.domain.dto.ModifyMemberRequestDto
+import java.time.Instant
 
 
 @Entity
@@ -14,9 +15,24 @@ data class Member (
     val id: Long? = null,
     val email: String = "",
     val password: String = "",
-    var name: String = ""
+    var name: String = "",
+    val createdAt: Instant = Instant.now(),
+    var modifiedAt: Instant = Instant.now(),
+    var withdrawYn: Boolean = false,
+    var withdrawAt: Instant? = null
 ) {
     fun modify(modifyRequest: ModifyMemberRequestDto) {
         name = modifyRequest.name
+        modifiedAt = Instant.now()
+    }
+
+    fun withdrawal() {
+        if (!withdrawYn) {
+            withdrawYn = true
+
+            val now = Instant.now()
+            withdrawAt = now
+            modifiedAt = now
+        }
     }
 }
