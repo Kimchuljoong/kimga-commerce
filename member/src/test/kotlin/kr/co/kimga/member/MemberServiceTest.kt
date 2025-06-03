@@ -1,25 +1,42 @@
 package kr.co.kimga.member
 
+import io.mockk.every
+import io.mockk.mockk
 import kr.co.kimga.member.domain.dto.CreateMemberRequestDto
+import kr.co.kimga.member.domain.entity.Member
+import kr.co.kimga.member.domain.exception.MemberDuplicatedException
+import kr.co.kimga.member.domain.service.MemberService
+import kr.co.kimga.member.infrastructure.repository.MemberJpaRepository
 import org.assertj.core.api.Assertions.*
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
+import kotlin.test.assertEquals
 
-class MemberServiceTest {
+class MemberServiceTest{
+
+    private lateinit var memberRepository: MemberJpaRepository
+    private lateinit var memberService: MemberService
+
+    val email = "test@test.com"
+    val password = "abcd1234!@#$"
+    val name = "tester"
+
+    @BeforeEach
+    fun setUp() {
+        memberRepository = mockk()
+        memberService = MemberService(memberRepository)
+    }
 
     @Test
     @DisplayName("junit 정상 동작 테스트")
     fun emptyTest() {}
 
-
     @Test
     @DisplayName("CreateMemberRequestDto를 통해 MemberEntity 생성를 생성할 수 있다")
     fun `toEntity should convert dto to entity`() {
         // given
-        val email = "test@test.com"
-        val password = "aa123"
-        val name = "tester"
-
         val dto = CreateMemberRequestDto(
             email = email,
             password = password,
@@ -35,6 +52,62 @@ class MemberServiceTest {
         assertThat(entity.name).isEqualTo(name)
         assertThat(entity.id).isNull()
     }
+
+    @Test
+    @DisplayName("CreateMemberRequestDto를 통해 사용자를 생성할 수 있다")
+    fun `Create Member From CreateMemberRequestDto`() {
+
+        // given
+        val createMemberRequestDto = CreateMemberRequestDto(
+            email = email,
+            password = password,
+            name = name
+        )
+
+        val fakeCreatedMember = Member(
+            id = 1,
+            email = email,
+            password = password,
+            name = name
+        )
+
+        every { memberRepository.save(any()) } returns fakeCreatedMember
+        every { memberRepository.existsByEmail(any()) } returns false
+
+        // when
+        val createdMember = memberService.create(createMemberRequestDto)
+
+        // then
+        assertThat(createdMember).isNotNull
+        assertThat(createdMember.id).isEqualTo(1)
+        assertThat(createdMember.email).isEqualTo(email)
+        assertThat(createdMember.name).isEqualTo(name)
+    }
+
+    @Test
+    @DisplayName("동일한 이메일로 중복으로 사용자를 생성할 수 없다")
+    fun `Can not create Member from Duplicated Email`() {
+
+        // given
+        val createMemberRequestDto = CreateMemberRequestDto(
+            email = email,
+            password = password,
+            name = name
+        )
+
+        every {
+            memberRepository.existsByEmail(any())
+        } returns true
+
+        // when
+        // then
+        assertThrows<MemberDuplicatedException> {
+            memberService.create(createMemberRequestDto)
+        }.let {
+            assertEquals("이미 가입한 이메일 입니다", it.message)
+        }
+    }
+
 
 
 

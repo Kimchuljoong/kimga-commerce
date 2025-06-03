@@ -43,6 +43,7 @@ subprojects {
 		implementation("org.springframework.kafka:spring-kafka")
 		compileOnly("org.projectlombok:lombok")
 		annotationProcessor("org.projectlombok:lombok")
+		testImplementation("io.mockk:mockk:1.13.10")
 		testImplementation("org.springframework.boot:spring-boot-starter-test")
 		testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
 		testImplementation("org.springframework.kafka:spring-kafka-test")
