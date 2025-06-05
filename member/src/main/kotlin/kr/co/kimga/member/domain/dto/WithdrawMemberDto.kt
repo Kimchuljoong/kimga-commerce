@@ -7,7 +7,7 @@ data class WithdrawMemberDto (
     val withdrawDate: Instant?,
 ) {
     companion object {
-        fun from(member: Member): WithdrawMemberDto {
+        fun of(member: Member): WithdrawMemberDto {
             return WithdrawMemberDto(member.withdrawAt)
         }
     }

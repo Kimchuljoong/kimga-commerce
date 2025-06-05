@@ -22,7 +22,7 @@ class MemberService (
         validateDuplicateMemberByEmail(createRequest)
 
         val createdMember = memberRepository.save(createRequest)
-        return CreatedMemberDto.from(createdMember)
+        return CreatedMemberDto.of(createdMember)
 
     }
 
@@ -38,13 +38,13 @@ class MemberService (
             .orElseThrow { MemberNotFoundException() }
 
         member.modify(modifyMemberRequestDto)
-        return ModifiedMemberDto.from(member)
+        return ModifiedMemberDto.of(member)
     }
 
     fun withDraw(withdrawMemberRequestDto: WithdrawMemberRequestDto): WithdrawMemberDto {
         val member = memberRepository.findById(withdrawMemberRequestDto.id)
             .orElseThrow { MemberNotFoundException() }
         member.withdrawal()
-        return WithdrawMemberDto.from(member)
+        return WithdrawMemberDto.of(member)
     }
 }

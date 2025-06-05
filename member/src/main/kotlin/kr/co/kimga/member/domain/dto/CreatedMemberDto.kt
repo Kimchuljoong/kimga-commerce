@@ -8,7 +8,7 @@ data class CreatedMemberDto (
     val name: String,
 ) {
     companion object {
-        fun from(createdMember: Member) : CreatedMemberDto {
+        fun of(createdMember: Member) : CreatedMemberDto {
             return CreatedMemberDto(createdMember.id!!, createdMember.email, createdMember.name)
         }
     }

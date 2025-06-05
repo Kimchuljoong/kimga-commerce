@@ -7,7 +7,7 @@ data class ModifiedMemberDto (
     val name: String
 ) {
     companion object {
-        fun from(member: Member) : ModifiedMemberDto {
+        fun of(member: Member) : ModifiedMemberDto {
             return ModifiedMemberDto(member.id!!, member.name)
         }
     }

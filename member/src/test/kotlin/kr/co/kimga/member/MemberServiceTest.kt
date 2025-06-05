@@ -152,4 +152,10 @@ class MemberServiceTest{
         assertEquals(fakeMember.withdrawAt, withdrawResult.withdrawDate)
     }
 
+    @Test
+    @DisplayName("사용자는 가입한 정보로 로그인할 수 있다")
+    fun `user can login with their registered info`() {
+
+    }
+
 }
