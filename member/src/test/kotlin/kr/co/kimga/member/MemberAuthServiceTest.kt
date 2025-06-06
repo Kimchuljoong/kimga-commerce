@@ -5,7 +5,6 @@ import io.mockk.mockk
 import kr.co.kimga.member.domain.dto.MemberLoginDto
 import kr.co.kimga.member.domain.entity.Member
 import kr.co.kimga.member.domain.service.MemberAuthService
-import kr.co.kimga.member.domain.service.MemberService
 import kr.co.kimga.member.infrastructure.repository.MemberJpaRepository
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
