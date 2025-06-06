@@ -1,85 +1,46 @@
 package kr.co.kimga.member.infrastructure.security.jwt
 
 import io.jsonwebtoken.Claims
+import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.Jwts
-import io.jsonwebtoken.security.Keys
-import org.springframework.beans.factory.annotation.Value
 import java.time.Instant
 import java.util.*
 import javax.crypto.SecretKey
 
+interface JwtProvider {
 
-class JwtProvider (
-    @Value("\${jwt.access.secret}")
-    private val accessSecret: String,
-    @Value("\${jwt.access.exp}")
-    private val accessExpSeconds: Long,
-    @Value("\${jwt.refresh.secret}")
-    private val refreshSecret: String,
-    @Value("\${jwt.refresh.exp}")
-    private val refreshExpSeconds: Long,
-) {
+    val secretKey: SecretKey
 
-    private val accessSecretKey: SecretKey = Keys.hmacShaKeyFor(accessSecret.toByteArray())
-    private val refreshSecretKey: SecretKey = Keys.hmacShaKeyFor(refreshSecret.toByteArray())
+    fun generate(subject: String): String
+    fun validate(token: String) : JwtValidationResult
+    fun extractSubject(token: String) : Claims
 
-    fun generateAccessToken(subject: String): String {
-        val now = Instant.now()
-        val expiration =  now.plusSeconds(accessExpSeconds)
-
-        return Jwts.builder()
+    fun generateToken(subject: String, now: Instant, expiration: Instant): String =
+        Jwts.builder()
             .subject(subject)
             .issuedAt(Date.from(now))
             .expiration(Date.from(expiration))
-            .signWith(accessSecretKey)
+            .signWith(secretKey)
             .compact()
-    }
 
-    fun generateRefreshToken(subject: String): String {
-        val now = Instant.now()
-        val expiration =  now.plusSeconds(refreshExpSeconds)
-
-        return Jwts.builder()
-            .subject(subject)
-            .issuedAt(Date.from(now))
-            .expiration(Date.from(expiration))
-            .signWith(refreshSecretKey)
-            .compact()
-    }
-
-    fun validateAccessToken(token: String) : Boolean {
-        return validateToken(token, accessSecretKey)
-    }
-
-    fun validateRefreshToken(token: String) : Boolean {
-        return validateToken(token, refreshSecretKey)
-    }
-
-    private fun validateToken(token: String, key: SecretKey) = try {
+    fun parseClaims(token: String): Claims =
         Jwts.parser()
-            .verifyWith(key)
-            .build()
-            .parseSignedClaims(token)
-        true
-    } catch (e: JwtException) {
-        false
-    }
-
-    fun extractSubjectFromAccessToken(token: String) : Claims {
-        return parseClaims(accessSecretKey, token)
-    }
-
-    fun extractSubjectFromRefreshToken(token: String) : Claims {
-        return parseClaims(refreshSecretKey, token)
-    }
-
-    private fun parseClaims(key: SecretKey, token: String): Claims =
-        Jwts.parser()
-            .verifyWith(key)
+            .verifyWith(secretKey)
             .build()
             .parseSignedClaims(token)
             .payload
 
+    fun validateToken(token: String) = try {
+        Jwts.parser()
+            .verifyWith(secretKey)
+            .build()
+            .parseSignedClaims(token)
 
+        JwtValidationResult.VALID
+    } catch (e: ExpiredJwtException) {
+        JwtValidationResult.EXPIRED
+    } catch (e: JwtException) {
+        JwtValidationResult.INVALID
+    }
 }
