@@ -14,3 +14,11 @@ spring:
     redis:
       host: localhost
       port: 6379
+
+jwt:
+  access:
+    secret: Z87UeL+XGqVoONEFIm5toKLN/Pzx88eLxb9rR77vm5A=
+    exp: 3600 # 1시간
+  refresh:
+    secret: CPDzpOnBkn0lQUTL+by+byB7MybX7vuBHqaljVkkAF0=
+    exp: 86400 # 24시간
