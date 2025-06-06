@@ -23,6 +23,6 @@ class RefreshJwtProvider (
 
     override fun validate(token: String): JwtValidationResult = validateToken(token)
 
-    override fun extractSubject(token: String) : Claims = parseClaims(token)
+    override fun extractClaims(token: String) : Claims = parseClaims(token)
 
 }

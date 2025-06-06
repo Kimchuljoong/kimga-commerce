@@ -25,12 +25,10 @@ class TokenService (
         return Pair(accessToken, refreshToken)
     }
 
-    fun renewToken(oldAccessToken: String, oldRefreshToken: String) : Pair<String, String> {
+    fun renewToken(oldAccessToken: String, oldRefreshToken: String, uuid: String) : Pair<String, String> {
         if (canRefresh(oldAccessToken, oldRefreshToken)) {
-            val accessUuid = Utils.generateUuid()
-            val refreshUuid = Utils.generateUuid()
-            val newAccessToken = accessJwtProvider.generate(accessUuid)
-            val newRefreshToken = refreshJwtProvider.generate(refreshUuid)
+            val newAccessToken = accessJwtProvider.generate(uuid)
+            val newRefreshToken = refreshJwtProvider.generate(uuid)
             return Pair(newAccessToken, newRefreshToken)
         }
         throw CanNotRenewTokenException()
@@ -46,5 +44,5 @@ class TokenService (
         }
     }
 
-    fun getSubject(token: String): Claims = accessJwtProvider.extractSubject(token)
+    fun getClaims(token: String): Claims = accessJwtProvider.extractClaims(token)
 }

@@ -1,15 +1,15 @@
 package kr.co.kimga.member.application.auth
 
-import kr.co.kimga.member.application.auth.dto.AuthenticateRequestDto
+import kr.co.kimga.member.application.auth.dto.LoginRequestDto
+import kr.co.kimga.member.application.auth.dto.LogoutRequestDto
+import kr.co.kimga.member.application.auth.dto.RefreshRequestDto
+import kr.co.kimga.member.domain.exception.CanNotRefreshTokenException
 import kr.co.kimga.member.domain.service.MemberAuthService
 import kr.co.kimga.member.domain.service.SessionService
 import kr.co.kimga.member.domain.service.TokenService
 import kr.co.kimga.member.infrastructure.common.Utils
-import kr.co.kimga.member.infrastructure.security.jwt.AccessJwtProvider
-import kr.co.kimga.member.infrastructure.security.jwt.JwtProvider
 import lombok.RequiredArgsConstructor
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
 
 @Service
 @RequiredArgsConstructor
@@ -19,13 +19,31 @@ class AuthFacade (
     val tokenService: TokenService
 ) {
 
-    fun authenticate(authenticateRequest: AuthenticateRequestDto) : Pair<String, String> {
-        val authenticatedMember = memberAuthService.authenticate(authenticateRequest.email, authenticateRequest.password)
+    fun login(loginRequest: LoginRequestDto) : Pair<String, String> {
+        val authenticatedMember = memberAuthService.authenticate(loginRequest.email, loginRequest.password)
         val uuid = Utils.generateUuid()
         val (accessToken, refreshToken) = tokenService.makeNewToken(uuid)
-        sessionService.removeSession(authenticatedMember.id)
-        sessionService.saveSession(accessToken, refreshToken, authenticatedMember.id, uuid)
+        sessionService.removeSessionById(authenticatedMember.id)
+        sessionService.saveSession(authenticatedMember.id, uuid)
         return Pair(accessToken, refreshToken)
+    }
+
+    fun logout(logoutRequestDto: LogoutRequestDto) {
+        if (sessionService.hasSession(logoutRequestDto.uuid)) {
+            sessionService.removeSessionByUuid(logoutRequestDto.uuid)
+        }
+    }
+
+    fun refresh(refreshRequestDto: RefreshRequestDto) : Pair<String, String> {
+        if (!sessionService.hasSession(refreshRequestDto.uuid)) {
+            throw CanNotRefreshTokenException()
+        }
+        val id = sessionService.findMemberId(refreshRequestDto.uuid)
+        val uuid = Utils.generateUuid()
+        val (newAccessToken, newRefreshToken) = tokenService.renewToken(refreshRequestDto.accessToken, refreshRequestDto.refreshToken, uuid)
+        sessionService.removeSessionByUuid(refreshRequestDto.uuid)
+        sessionService.saveSession(id, uuid)
+        return Pair(newAccessToken, newRefreshToken)
     }
 
 }

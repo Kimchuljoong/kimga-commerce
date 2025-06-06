@@ -14,7 +14,7 @@ interface JwtProvider {
 
     fun generate(subject: String): String
     fun validate(token: String) : JwtValidationResult
-    fun extractSubject(token: String) : Claims
+    fun extractClaims(token: String) : Claims
 
     fun generateToken(subject: String, now: Instant, expiration: Instant): String =
         Jwts.builder()

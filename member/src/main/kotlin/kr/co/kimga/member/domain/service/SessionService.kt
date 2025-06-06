@@ -1,6 +1,7 @@
 package kr.co.kimga.member.domain.service
 
 import lombok.RequiredArgsConstructor
+import org.apache.kafka.common.protocol.types.Field.Bool
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.stereotype.Service
 
@@ -9,25 +10,32 @@ import org.springframework.stereotype.Service
 class SessionService (
     val redisTemplate: RedisTemplate<String, Any>
 ) {
-    private val ACCESS_PREFIX = "access:"
-    private val REFRESH_PREFIX = "refresh:"
-
-    fun saveSession(accessToken: String, refreshToken: String, id: Long, uuid: String) {
-        redisTemplate.opsForValue().set(uuid, id)
-        redisTemplate.opsForValue().set(id.toString(), uuid)
-        redisTemplate.opsForValue().set(ACCESS_PREFIX + uuid, accessToken)
-        redisTemplate.opsForValue().set(REFRESH_PREFIX + uuid, refreshToken)
+    companion object {
+        private const val LOGIN_PREFIX = "login:"
+        private const val SESSION_PREFIX = "session:"
     }
 
-    fun removeSession(id: Long) {
-        val uuid = redisTemplate.opsForValue().get(id.toString()).toString()
-        redisTemplate.delete(id.toString())
-        redisTemplate.delete(uuid)
-        redisTemplate.delete(ACCESS_PREFIX + uuid)
-        redisTemplate.delete(REFRESH_PREFIX + uuid)
+    fun saveSession(id: Long, uuid: String) {
+        redisTemplate.opsForValue().set(LOGIN_PREFIX + id, uuid)
+        redisTemplate.opsForValue().set(SESSION_PREFIX + uuid, id.toString())
     }
 
-    fun hasSession(key: String): Boolean = redisTemplate.hasKey(key)
+    fun removeSessionByUuid(uuid: String) {
+        val id = findMemberId(uuid)
+        redisTemplate.delete(LOGIN_PREFIX + id)
+        redisTemplate.delete(SESSION_PREFIX + uuid)
+    }
 
-    private fun findMemberId(uuid: String): String = redisTemplate.opsForValue().get(uuid).toString()
+    fun removeSessionById(id: Long) {
+        val uuid = findUuid(id)
+        redisTemplate.delete(LOGIN_PREFIX + id)
+        redisTemplate.delete(SESSION_PREFIX + uuid)
+    }
+
+    fun hasSession(uuid: String): Boolean = redisTemplate.hasKey(SESSION_PREFIX + uuid)
+
+    fun hasLogin(id: Long): Boolean = redisTemplate.hasKey(id.toString())
+
+    fun findMemberId(uuid: String): Long = redisTemplate.opsForValue().get(uuid) as Long
+    fun findUuid(id: Long): String = redisTemplate.opsForValue().get(id.toString()).toString()
 }

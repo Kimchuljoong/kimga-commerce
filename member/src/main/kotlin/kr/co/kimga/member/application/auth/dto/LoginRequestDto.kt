@@ -1,7 +1,7 @@
 package kr.co.kimga.member.application.auth.dto
 
 
-data class AuthenticateRequestDto (
+data class LoginRequestDto (
     val email: String,
     val password: String
 )
