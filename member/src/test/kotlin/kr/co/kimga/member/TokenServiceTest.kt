@@ -1,5 +1,6 @@
 package kr.co.kimga.member
 
+import kr.co.kimga.member.domain.exception.CanNotRenewTokenException
 import kr.co.kimga.member.domain.service.TokenService
 import kr.co.kimga.member.infrastructure.common.Utils
 import kr.co.kimga.member.infrastructure.security.jwt.AccessJwtProvider
@@ -8,6 +9,7 @@ import kr.co.kimga.member.infrastructure.security.jwt.RefreshJwtProvider
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
 
@@ -23,7 +25,7 @@ class TokenServiceTest {
     @BeforeEach
     fun serUp() {
         accessJwtProvider = AccessJwtProvider(secret, exp)
-        refreshJwtProvider = RefreshJwtProvider(secret, exp+10L)
+        refreshJwtProvider = RefreshJwtProvider(secret, exp+2L)
         tokenService = TokenService(accessJwtProvider, refreshJwtProvider)
     }
 
@@ -45,7 +47,7 @@ class TokenServiceTest {
 
     @Test
     @DisplayName("만료된 AccessToken, 만료되지 않은 RefreshToken을 통해 토큰을 리프레시 할 수 있다")
-    fun `can refresh token with access token and refresh token`() {
+    fun `can refresh token with expired access token and alive refresh token`() {
         // given
         val uuid = Utils.generateUuid()
         val (accessToken, refreshToken) = tokenService.makeNewToken(uuid)
@@ -62,5 +64,36 @@ class TokenServiceTest {
         assertNotEquals(uuid, renewedRefreshSubject)
         assertEquals(newUuid, renewedAccessSubject)
         assertEquals(newUuid, renewedRefreshSubject)
+    }
+
+    @Test
+    @DisplayName("만료되지 않은 AccessToken, 만료되지 않은 RefreshToken을 통해 토큰을 리프레시 할 수 없다")
+    fun `can not refresh token with alive access token and alive refresh token`() {
+        // given
+        val uuid = Utils.generateUuid()
+        val (accessToken, refreshToken) = tokenService.makeNewToken(uuid)
+
+        // when
+        // then
+        val newUuid = Utils.generateUuid()
+        assertThrows<CanNotRenewTokenException> {
+            tokenService.renewToken(accessToken, refreshToken, newUuid)
+        }
+    }
+
+    @Test
+    @DisplayName("만료된 AccessToken, 만료된 RefreshToken을 통해 토큰을 리프레시 할 수 없다")
+    fun `can not refresh token with expired access token and expired refresh token`() {
+        // given
+        val uuid = Utils.generateUuid()
+        val (accessToken, refreshToken) = tokenService.makeNewToken(uuid)
+
+        // when
+        // then
+        Thread.sleep(3000L)
+        val newUuid = Utils.generateUuid()
+        assertThrows<CanNotRenewTokenException> {
+            tokenService.renewToken(accessToken, refreshToken, newUuid)
+        }
     }
 }

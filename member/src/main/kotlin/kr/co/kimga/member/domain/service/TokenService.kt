@@ -38,8 +38,8 @@ class TokenService (
         val accessValidationResult = accessJwtProvider.validate(accessToken)
         val refreshValidationResult = refreshJwtProvider.validate(refreshToken)
         return when {
-            accessValidationResult.equals(JwtValidationResult.EXPIRED) &&
-            refreshValidationResult.equals(JwtValidationResult.VALID) -> true
+            accessValidationResult == JwtValidationResult.EXPIRED &&
+            refreshValidationResult == JwtValidationResult.VALID -> true
             else -> false
         }
     }
