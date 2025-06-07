@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service
 @Service
 @RequiredArgsConstructor
 class MemberAuthService (
-    val memberRepository: MemberJpaRepository
+    private val memberRepository: MemberJpaRepository
 ) {
 
     fun authenticate(email: String, password: String): AuthenticatedMemberDto {

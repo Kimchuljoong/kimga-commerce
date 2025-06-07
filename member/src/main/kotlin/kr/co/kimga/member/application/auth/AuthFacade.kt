@@ -14,9 +14,9 @@ import org.springframework.stereotype.Service
 @Service
 @RequiredArgsConstructor
 class AuthFacade (
-    val sessionService: SessionService,
-    val memberAuthService: MemberAuthService,
-    val tokenService: TokenService
+    private val sessionService: SessionService,
+    private val memberAuthService: MemberAuthService,
+    private val tokenService: TokenService
 ) {
 
     fun login(loginRequest: LoginRequestDto) : Pair<String, String> {
