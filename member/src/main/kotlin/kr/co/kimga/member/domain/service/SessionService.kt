@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service
 @Service
 @RequiredArgsConstructor
 class SessionService (
-    val redisTemplate: RedisTemplate<String, Any>
+    private val redisTemplate: RedisTemplate<String, Any>
 ) {
     companion object {
         private const val LOGIN_PREFIX = "login:"

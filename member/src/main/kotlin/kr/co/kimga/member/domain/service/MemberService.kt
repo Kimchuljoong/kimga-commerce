@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 @RequiredArgsConstructor
 class MemberService (
-    val memberRepository: MemberJpaRepository
+    private val memberRepository: MemberJpaRepository
 ) {
 
     @Transactional
