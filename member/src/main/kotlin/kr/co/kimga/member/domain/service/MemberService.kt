@@ -1,5 +1,6 @@
 package kr.co.kimga.member.domain.service
 
+import jakarta.validation.Valid
 import kr.co.kimga.member.domain.dto.*
 import kr.co.kimga.member.domain.entity.Member
 import kr.co.kimga.member.domain.exception.MemberDuplicatedException
@@ -16,7 +17,7 @@ class MemberService (
 ) {
 
     @Transactional
-    fun create(createMemberRequestDto: CreateMemberRequestDto) : CreatedMemberDto {
+    fun create(@Valid createMemberRequestDto: CreateMemberRequestDto) : CreatedMemberDto {
         val createRequest = createMemberRequestDto.toEntity()
 
         validateDuplicateMemberByEmail(createRequest)
@@ -33,7 +34,7 @@ class MemberService (
     }
 
     @Transactional
-    fun modify(modifyMemberRequestDto: ModifyMemberRequestDto) : ModifiedMemberDto {
+    fun modify(@Valid modifyMemberRequestDto: ModifyMemberRequestDto) : ModifiedMemberDto {
         val member = memberRepository.findById(modifyMemberRequestDto.id)
             .orElseThrow { MemberNotFoundException() }
 
@@ -41,6 +42,7 @@ class MemberService (
         return ModifiedMemberDto.of(member)
     }
 
+    @Transactional
     fun withDraw(withdrawMemberRequestDto: WithdrawMemberRequestDto): WithdrawMemberDto {
         val member = memberRepository.findById(withdrawMemberRequestDto.id)
             .orElseThrow { MemberNotFoundException() }
