@@ -1,7 +1,7 @@
 package kr.co.kimga.member.domain.entity
 
 import jakarta.persistence.*
-import kr.co.kimga.member.domain.dto.ModifyMemberRequestDto
+import kr.co.kimga.member.domain.dto.ModifyMemberDto
 import java.time.Instant
 
 @Entity
@@ -20,7 +20,7 @@ data class Member (
     var withdrawYn: Boolean = false,
     var withdrawAt: Instant? = null
 ) {
-    fun modify(modifyRequest: ModifyMemberRequestDto) {
+    fun modify(modifyRequest: ModifyMemberDto) {
         name = modifyRequest.name
         modifiedAt = Instant.now()
     }

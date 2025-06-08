@@ -1,8 +1,8 @@
-package kr.co.kimga.member
+package kr.co.kimga.member.unit
 
 import jakarta.validation.Validation
 import jakarta.validation.Validator
-import kr.co.kimga.member.domain.dto.CreateMemberRequestDto
+import kr.co.kimga.member.domain.dto.CreateMemberDto
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
@@ -10,7 +10,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
-class CreateMemberRequestDtoValidationTest {
+class CreateMemberDtoValidationTest {
 
     private lateinit var validator: Validator
 
@@ -28,7 +28,7 @@ class CreateMemberRequestDtoValidationTest {
     @DisplayName("유효한 값은 에러가 없다")
     fun `valid values dose not have errors`() {
         // given
-        val dto = CreateMemberRequestDto(email = email, password = password, name = name)
+        val dto = CreateMemberDto(email = email, password = password, name = name)
 
         // when
         val violations = validator.validate(dto)
@@ -44,7 +44,7 @@ class CreateMemberRequestDtoValidationTest {
         val emptyEmail = ""
 
         // given
-        val dto = CreateMemberRequestDto(email = emptyEmail, password = password, name = name)
+        val dto = CreateMemberDto(email = emptyEmail, password = password, name = name)
 
         // when
         val violations = validator.validate(dto)
@@ -62,7 +62,7 @@ class CreateMemberRequestDtoValidationTest {
     fun  `email should be valid`() {
         // given
         val invalidEmail = "email"
-        val dto = CreateMemberRequestDto(email = invalidEmail, password = password, name = name)
+        val dto = CreateMemberDto(email = invalidEmail, password = password, name = name)
 
         // when
         val violations = validator.validate(dto)
@@ -79,7 +79,7 @@ class CreateMemberRequestDtoValidationTest {
     fun  `password must be over 10 characters long`() {
         // given
         val emptyPassword = ""
-        val dto = CreateMemberRequestDto(email = email, password = emptyPassword, name = name)
+        val dto = CreateMemberDto(email = email, password = emptyPassword, name = name)
 
         // when
         val violations = validator.validate(dto)
@@ -98,7 +98,7 @@ class CreateMemberRequestDtoValidationTest {
     fun  `password must be less 15 characters long`() {
         // given
         val longPassword = "abcd1234!@#$12345"
-        val dto = CreateMemberRequestDto(email = email, password = longPassword, name = name)
+        val dto = CreateMemberDto(email = email, password = longPassword, name = name)
 
         // when
         val violations = validator.validate(dto)
@@ -120,9 +120,9 @@ class CreateMemberRequestDtoValidationTest {
         val noNumberPassword = "abcdefgh!@#$"
         val noSpecialCharacterPassword = "abcd1234123"
 
-        val dtoWithNoLetterPassword = CreateMemberRequestDto(email = email, password = noLetterPassword, name = name)
-        val dtoWithNoNumberPassword = CreateMemberRequestDto(email = email, password = noNumberPassword, name = name)
-        val dtoWithNoSpecialCharacterPassword = CreateMemberRequestDto(email = email, password = noSpecialCharacterPassword, name = name)
+        val dtoWithNoLetterPassword = CreateMemberDto(email = email, password = noLetterPassword, name = name)
+        val dtoWithNoNumberPassword = CreateMemberDto(email = email, password = noNumberPassword, name = name)
+        val dtoWithNoSpecialCharacterPassword = CreateMemberDto(email = email, password = noSpecialCharacterPassword, name = name)
 
         // when
         val violations1 = validator.validate(dtoWithNoLetterPassword)
@@ -147,7 +147,7 @@ class CreateMemberRequestDtoValidationTest {
 
         // given
         val invalidname = "a"
-        val dto = CreateMemberRequestDto(email = email, password = password, name = invalidname)
+        val dto = CreateMemberDto(email = email, password = password, name = invalidname)
 
         // when
 

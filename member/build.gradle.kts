@@ -18,3 +18,7 @@ dependencies {
     testImplementation("com.redis:testcontainers-redis:2.2.4")
 
 }
+
+tasks.withType<Test> {
+    maxParallelForks = 1
+}

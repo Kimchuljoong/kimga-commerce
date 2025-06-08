@@ -1,9 +1,9 @@
-package kr.co.kimga.member
+package kr.co.kimga.member.unit
 
 import kr.co.kimga.member.infrastructure.common.Utils
-import kr.co.kimga.member.infrastructure.security.jwt.AccessJwtProvider
 import kr.co.kimga.member.infrastructure.security.jwt.JwtProvider
 import kr.co.kimga.member.infrastructure.security.jwt.JwtValidationResult
+import kr.co.kimga.member.infrastructure.security.jwt.RefreshJwtProvider
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -11,7 +11,7 @@ import org.junit.jupiter.api.assertNotNull
 import java.util.*
 import kotlin.test.assertEquals
 
-class AccessJwtProviderTest {
+class RefreshJwtProviderTest {
 
     private val secret = "GdThfS3sypHkyMD+ykDdzeXVtDQH3vQ9kI/fTS3tlLg="
     private val exp = 1L
@@ -20,12 +20,12 @@ class AccessJwtProviderTest {
 
     @BeforeEach
     fun setUp() {
-        jwtProvider = AccessJwtProvider(secret, exp)
+        jwtProvider = RefreshJwtProvider(secret, exp)
     }
 
     @Test
-    @DisplayName("유효한 Access Token을 생성할 수 있다")
-    fun `can generate valid access token`() {
+    @DisplayName("유효한 Refresh Token을 생성할 수 있다")
+    fun `can generate valid refresh token`() {
         // given
         val uuid = Utils.generateUuid()
 
@@ -39,8 +39,8 @@ class AccessJwtProviderTest {
     }
 
     @Test
-    @DisplayName("만료된 Access Token 검증할 수 있다")
-    fun `can validate expired access token`() {
+    @DisplayName("만료된 Refresh Token 검증할 수 있다")
+    fun `can validate expired refresh token`() {
         // given
         val uuid = Utils.generateUuid()
         val token = jwtProvider.generate(uuid)
@@ -55,8 +55,8 @@ class AccessJwtProviderTest {
     }
 
     @Test
-    @DisplayName("변조된 Access Token을 검증할 수 있다")
-    fun `can validate forged access token`() {
+    @DisplayName("변조된 Refresh Token을 검증할 수 있다")
+    fun `can validate forged refresh token`() {
 
         // given
         val uuid = Utils.generateUuid()
@@ -69,6 +69,7 @@ class AccessJwtProviderTest {
 
         // then
         assertEquals(JwtValidationResult.INVALID, validationResult)
+
     }
 
     private fun forgeToken(token: String, uuid: String, modifyUuid: String): String {

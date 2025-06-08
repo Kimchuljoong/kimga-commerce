@@ -1,35 +1,35 @@
-package kr.co.kimga.member.interfaces.config
+package kr.co.kimga.member.intg.config
 
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
 import org.testcontainers.containers.GenericContainer
+import org.testcontainers.junit.jupiter.Container
+import org.testcontainers.junit.jupiter.Testcontainers
 
-open class RedisTestConfig {
+@Testcontainers
+abstract class RedisTestConfig {
+
     companion object {
-        private var redis: GenericContainer<*>
-        private val REDIS_IMAGE_NAME = "redis:6.2.7-alpine"
-        private val PORT = 6379
-
-        init {
-            redis = GenericContainer(REDIS_IMAGE_NAME)
-                .withExposedPorts(PORT)
-                .withReuse(true)
-        }
-
         @JvmStatic
+        @Container
+        var redis: GenericContainer<*> = GenericContainer("redis:6.2.7-alpine")
+            .withExposedPorts(6379)
+            .withReuse(true)
+
         @BeforeAll
+        @JvmStatic
         fun beforeAll() {
-            if (!redis.isRunning()) {
+            if (redis.isRunning) {
                 redis.start()
             }
         }
 
-        @JvmStatic
         @AfterAll
+        @JvmStatic
         fun afterAll() {
-            redis.close()
+            redis.stop()
         }
 
         @JvmStatic

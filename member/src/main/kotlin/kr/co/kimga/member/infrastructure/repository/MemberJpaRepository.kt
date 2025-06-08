@@ -9,5 +9,5 @@ interface MemberJpaRepository : JpaRepository<Member, Long> {
 
     fun existsByEmail(email: String): Boolean
 
-    fun findByEmailAndPassword(email: String, password: String): Member?
+    fun findByEmailAndPasswordAndWithdrawYn(email: String, password: String, withdrawYn: Boolean = false): Member?
 }

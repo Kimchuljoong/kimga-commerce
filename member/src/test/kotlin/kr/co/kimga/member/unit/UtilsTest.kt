@@ -1,4 +1,4 @@
-package kr.co.kimga.member
+package kr.co.kimga.member.unit
 
 import kr.co.kimga.member.infrastructure.common.Utils
 import org.junit.jupiter.api.DisplayName

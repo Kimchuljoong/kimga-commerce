@@ -14,5 +14,7 @@ class WebConfig(
         registry.addInterceptor(authInterceptor)
             .excludePathPatterns("/api/v1/auth/login")
             .addPathPatterns("/api/v1/auth/**")
+            .excludePathPatterns("/api/v1/member/new")
+            .addPathPatterns("/api/v1/member/**")
     }
 }
