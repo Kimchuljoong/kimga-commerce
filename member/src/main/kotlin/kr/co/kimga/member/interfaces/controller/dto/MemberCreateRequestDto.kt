@@ -1,12 +1,11 @@
-package kr.co.kimga.member.domain.dto
+package kr.co.kimga.member.interfaces.controller.dto
 
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Size
-import kr.co.kimga.member.domain.entity.Member
 
-data class CreateMemberRequestDto(
+data class MemberCreateRequestDto(
 
     @field:NotBlank(message = "이메일은 필수 입니다")
     @field:Email(message = "이메일 형식이 올바르지 않습니다")
@@ -22,13 +21,4 @@ data class CreateMemberRequestDto(
 
     @field:Size(min = 2, message = "이름은 2글자 이상 작성해야 합니다")
     val name: String
-
-) {
-    fun toEntity(): Member {
-        return Member(
-            email = email,
-            password = password,
-            name = name
-        )
-    }
-}
+)

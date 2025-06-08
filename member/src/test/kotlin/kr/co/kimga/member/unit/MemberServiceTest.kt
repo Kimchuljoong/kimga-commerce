@@ -1,10 +1,10 @@
-package kr.co.kimga.member
+package kr.co.kimga.member.unit
 
 import io.mockk.every
 import io.mockk.mockk
-import kr.co.kimga.member.domain.dto.CreateMemberRequestDto
-import kr.co.kimga.member.domain.dto.ModifyMemberRequestDto
-import kr.co.kimga.member.domain.dto.WithdrawMemberRequestDto
+import kr.co.kimga.member.domain.dto.CreateMemberDto
+import kr.co.kimga.member.domain.dto.ModifyMemberDto
+import kr.co.kimga.member.domain.dto.WithdrawMemberDto
 import kr.co.kimga.member.domain.entity.Member
 import kr.co.kimga.member.domain.exception.MemberDuplicatedException
 import kr.co.kimga.member.domain.service.MemberService
@@ -37,7 +37,7 @@ class MemberServiceTest{
     @DisplayName("CreateMemberRequestDto를 통해 MemberEntity 생성를 생성할 수 있다")
     fun `toEntity should convert dto to entity`() {
         // given
-        val dto = CreateMemberRequestDto(
+        val dto = CreateMemberDto(
             email = email,
             password = password,
             name = name
@@ -58,7 +58,7 @@ class MemberServiceTest{
     fun `Create Member From CreateMemberRequestDto`() {
 
         // given
-        val createMemberRequestDto = CreateMemberRequestDto(
+        val createMemberDto = CreateMemberDto(
             email = email,
             password = password,
             name = name
@@ -75,7 +75,7 @@ class MemberServiceTest{
         every { memberRepository.existsByEmail(any()) } returns false
 
         // when
-        val createdMember = memberService.create(createMemberRequestDto)
+        val createdMember = memberService.create(createMemberDto)
 
         // then
         assertThat(createdMember).isNotNull
@@ -89,7 +89,7 @@ class MemberServiceTest{
     fun `Can not create Member from Duplicated Email`() {
 
         // given
-        val createMemberRequestDto = CreateMemberRequestDto(
+        val createMemberDto = CreateMemberDto(
             email = email,
             password = password,
             name = name
@@ -102,7 +102,7 @@ class MemberServiceTest{
         // when
         // then
         assertThrows<MemberDuplicatedException> {
-            memberService.create(createMemberRequestDto)
+            memberService.create(createMemberDto)
         }.let {
             assertEquals("이미 가입한 이메일 입니다", it.message)
         }
@@ -113,7 +113,7 @@ class MemberServiceTest{
     fun `can modify member info`() {
         val modifyName = "modify_name"
         // given
-        val modifyMemberRequestDto = ModifyMemberRequestDto(1, modifyName);
+        val modifyMemberDto = ModifyMemberDto(1, modifyName);
 
         val fakeModifiedMember = Member(
             id = 1,
@@ -125,7 +125,7 @@ class MemberServiceTest{
         every { memberRepository.findById(any()) } returns Optional.of(fakeModifiedMember)
 
         // when
-        val modifiedMember = memberService.modify(modifyMemberRequestDto)
+        val modifiedMember = memberService.modify(modifyMemberDto)
 
         // then
         assertNotNull(modifiedMember)
@@ -137,13 +137,13 @@ class MemberServiceTest{
     fun `can withdraw member`() {
 
         // given
-        val withdrawMemberRequestDto = WithdrawMemberRequestDto(1)
+        val withdrawMemberDto = WithdrawMemberDto(1)
         val fakeMember = Member(1, email, password, name)
 
         every { memberRepository.findById(any()) } returns Optional.of(fakeMember)
 
         // when
-        val withdrawResult = memberService.withDraw(withdrawMemberRequestDto)
+        val withdrawResult = memberService.withDraw(withdrawMemberDto)
 
         // then
         assertEquals(true, fakeMember.withdrawYn)

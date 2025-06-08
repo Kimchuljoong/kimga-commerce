@@ -6,7 +6,7 @@ import kr.co.kimga.member.application.auth.dto.LoginRequestDto
 import kr.co.kimga.member.application.auth.dto.TokenDto
 import kr.co.kimga.member.application.auth.dto.LogoutRequestDto
 import kr.co.kimga.member.application.auth.dto.RefreshRequestDto
-import kr.co.kimga.member.infrastructure.context.ContextHolder
+import kr.co.kimga.member.infrastructure.context.MemberContextHolder
 import kr.co.kimga.member.interfaces.controller.dto.AuthRefreshRequestDto
 import org.springframework.web.bind.annotation.*
 
@@ -23,12 +23,12 @@ class AuthControllerV1 (
 
     @PutMapping("/refresh")
     fun refresh(@Valid @RequestBody authRefreshRequestDto: AuthRefreshRequestDto) : TokenDto {
-        return authFacade.refresh(RefreshRequestDto(authRefreshRequestDto.refreshToken, ContextHolder.getUuid()))
+        return authFacade.refresh(RefreshRequestDto(authRefreshRequestDto.refreshToken, MemberContextHolder.getContext().uuid))
     }
 
     @DeleteMapping("/logout")
     fun logout() {
-        authFacade.logout(LogoutRequestDto(ContextHolder.getUuid()))
+        authFacade.logout(LogoutRequestDto(MemberContextHolder.getContext().uuid))
     }
 
 

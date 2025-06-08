@@ -1,4 +1,4 @@
-package kr.co.kimga.member
+package kr.co.kimga.member.unit
 
 import io.mockk.every
 import io.mockk.mockk
@@ -33,7 +33,7 @@ class MemberAuthServiceTest {
         // given
         val memberLoginDto = MemberLoginDto(email, password)
         val fakeMember = Member(1, email, password, name)
-        every { memberRepository.findByEmailAndPassword(any(), any()) } returns fakeMember
+        every { memberRepository.findByEmailAndPasswordAndWithdrawYn(any(), any()) } returns fakeMember
 
         // when
         val authenticatedMemberDto = memberAuthService.authenticate(memberLoginDto.email, memberLoginDto.password)

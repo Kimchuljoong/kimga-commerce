@@ -1,11 +1,12 @@
-package kr.co.kimga.member.interfaces.controller
+package kr.co.kimga.member.intg.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.redis.testcontainers.RedisContainer
 import kr.co.kimga.member.application.auth.dto.LoginRequestDto
 import kr.co.kimga.member.application.auth.dto.TokenDto
 import kr.co.kimga.member.domain.entity.Member
 import kr.co.kimga.member.infrastructure.repository.MemberJpaRepository
-import kr.co.kimga.member.interfaces.config.RedisTestConfig
+import kr.co.kimga.member.intg.config.RedisTestConfig
 import kr.co.kimga.member.interfaces.controller.dto.AuthRefreshRequestDto
 import org.junit.jupiter.api.*
 import org.springframework.beans.factory.annotation.Autowired
@@ -13,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.http.MediaType
+import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.delete
 import org.springframework.test.web.servlet.post
@@ -21,7 +23,7 @@ import kotlin.test.assertNotEquals
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class AuthControllerV1Test : RedisTestConfig() {
+class AuthControllerV1Test: RedisTestConfig() {
 
     @Autowired
     lateinit var memberRepository: MemberJpaRepository
@@ -41,7 +43,6 @@ class AuthControllerV1Test : RedisTestConfig() {
 
     @BeforeEach
     fun setUp() {
-        memberRepository.deleteAll()
         val member = Member(
             email = email,
             password = password,
@@ -53,6 +54,7 @@ class AuthControllerV1Test : RedisTestConfig() {
     @AfterEach
     fun tearDown() {
         redisTemplate.delete(redisTemplate.keys("*"))
+        memberRepository.deleteAll()
     }
 
     @Test
@@ -107,16 +109,6 @@ class AuthControllerV1Test : RedisTestConfig() {
             email = email,
             password = password
         )
-
-        mockMvc.post("/api/v1/auth/login") {
-            contentType = MediaType.APPLICATION_JSON
-            content = objectMapper.writeValueAsString(loginRequestDto)
-        }.andExpect {
-            status { isOk() }
-            content { contentType(MediaType.APPLICATION_JSON) }
-            jsonPath("$.accessToken") { exists() }
-            jsonPath("$.refreshToken") { exists() }
-        }
 
         val loginResult = mockMvc.post("/api/v1/auth/login") {
             contentType = MediaType.APPLICATION_JSON

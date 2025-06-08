@@ -17,8 +17,8 @@ class MemberService (
 ) {
 
     @Transactional
-    fun create(@Valid createMemberRequestDto: CreateMemberRequestDto) : CreatedMemberDto {
-        val createRequest = createMemberRequestDto.toEntity()
+    fun create(@Valid createMemberDto: CreateMemberDto) : CreatedMemberDto {
+        val createRequest = createMemberDto.toEntity()
 
         validateDuplicateMemberByEmail(createRequest)
 
@@ -34,19 +34,19 @@ class MemberService (
     }
 
     @Transactional
-    fun modify(@Valid modifyMemberRequestDto: ModifyMemberRequestDto) : ModifiedMemberDto {
-        val member = memberRepository.findById(modifyMemberRequestDto.id)
+    fun modify(@Valid modifyMemberDto: ModifyMemberDto) : ModifiedMemberDto {
+        val member = memberRepository.findById(modifyMemberDto.id)
             .orElseThrow { MemberNotFoundException() }
 
-        member.modify(modifyMemberRequestDto)
+        member.modify(modifyMemberDto)
         return ModifiedMemberDto.of(member)
     }
 
     @Transactional
-    fun withDraw(withdrawMemberRequestDto: WithdrawMemberRequestDto): WithdrawMemberDto {
-        val member = memberRepository.findById(withdrawMemberRequestDto.id)
+    fun withDraw(withdrawMemberDto: WithdrawMemberDto): WithdrawedMemberDto {
+        val member = memberRepository.findById(withdrawMemberDto.id)
             .orElseThrow { MemberNotFoundException() }
         member.withdrawal()
-        return WithdrawMemberDto.of(member)
+        return WithdrawedMemberDto.of(member)
     }
 }

@@ -1,4 +1,4 @@
-package kr.co.kimga.member
+package kr.co.kimga.member.unit
 
 import kr.co.kimga.member.domain.exception.CanNotRenewTokenException
 import kr.co.kimga.member.domain.service.TokenService

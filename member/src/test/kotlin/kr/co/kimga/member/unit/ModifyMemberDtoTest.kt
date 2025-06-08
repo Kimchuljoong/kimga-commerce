@@ -1,14 +1,14 @@
-package kr.co.kimga.member
+package kr.co.kimga.member.unit
 
 import jakarta.validation.Validation
 import jakarta.validation.Validator
-import kr.co.kimga.member.domain.dto.ModifyMemberRequestDto
+import kr.co.kimga.member.domain.dto.ModifyMemberDto
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
-class ModifyMemberRequestDtoTest {
+class ModifyMemberDtoTest {
 
     private lateinit var validator : Validator
 
@@ -23,10 +23,10 @@ class ModifyMemberRequestDtoTest {
     fun `modify name can not empty`() {
 
         // given
-        val modifyMemberRequestDto = ModifyMemberRequestDto(id = 1, name = "")
+        val modifyMemberDto = ModifyMemberDto(id = 1, name = "")
 
         // when
-        val violations = validator.validate(modifyMemberRequestDto)
+        val violations = validator.validate(modifyMemberDto)
 
         // then
         assertEquals(1, violations.size)

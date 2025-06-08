@@ -13,7 +13,7 @@ class MemberAuthService (
 ) {
 
     fun authenticate(email: String, password: String): AuthenticatedMemberDto {
-        val member = memberRepository.findByEmailAndPassword(email, password) ?: throw MemberNotFoundException()
+        val member = memberRepository.findByEmailAndPasswordAndWithdrawYn(email, password) ?: throw MemberNotFoundException()
         return AuthenticatedMemberDto.of(member)
     }
 }
