@@ -25,8 +25,8 @@ class TokenService (
         return Pair(accessToken, refreshToken)
     }
 
-    fun renewToken(oldAccessToken: String, oldRefreshToken: String, uuid: String) : Pair<String, String> {
-        if (canRefresh(oldAccessToken, oldRefreshToken)) {
+    fun renewToken(oldRefreshToken: String, uuid: String) : Pair<String, String> {
+        if (canRefresh(oldRefreshToken)) {
             val newAccessToken = accessJwtProvider.generate(uuid)
             val newRefreshToken = refreshJwtProvider.generate(uuid)
             return Pair(newAccessToken, newRefreshToken)
@@ -34,11 +34,10 @@ class TokenService (
         throw CanNotRenewTokenException()
     }
 
-    fun canRefresh(accessToken: String, refreshToken: String) : Boolean {
-        val accessValidationResult = accessJwtProvider.validate(accessToken)
+    fun canRefresh(refreshToken: String) : Boolean {
         val refreshValidationResult = refreshJwtProvider.validate(refreshToken)
+        println(refreshValidationResult)
         return when {
-            accessValidationResult == JwtValidationResult.EXPIRED &&
             refreshValidationResult == JwtValidationResult.VALID -> true
             else -> false
         }

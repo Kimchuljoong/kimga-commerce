@@ -39,9 +39,9 @@ class AuthFacade (
         if (!sessionService.hasSession(refreshRequestDto.uuid)) {
             throw CanNotRefreshTokenException()
         }
-        val id = sessionService.findMemberId(refreshRequestDto.uuid)
+        val id = sessionService.findMemberId(refreshRequestDto.uuid) ?: throw CanNotRefreshTokenException()
         val uuid = Utils.generateUuid()
-        val (newAccessToken, newRefreshToken) = tokenService.renewToken(refreshRequestDto.accessToken, refreshRequestDto.refreshToken, uuid)
+        val (newAccessToken, newRefreshToken) = tokenService.renewToken(refreshRequestDto.refreshToken, uuid)
         sessionService.removeSessionByUuid(refreshRequestDto.uuid)
         sessionService.saveSession(id, uuid)
         return TokenDto(newAccessToken, newRefreshToken)
