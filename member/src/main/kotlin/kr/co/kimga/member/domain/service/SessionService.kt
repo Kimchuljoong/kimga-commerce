@@ -17,7 +17,7 @@ class SessionService (
 
     fun saveSession(id: Long, uuid: String) {
         redisTemplate.opsForValue().set(LOGIN_PREFIX + id, uuid)
-        redisTemplate.opsForValue().set(SESSION_PREFIX + uuid, id.toString())
+        redisTemplate.opsForValue().set(SESSION_PREFIX + uuid, id)
     }
 
     fun removeSessionByUuid(uuid: String) {
@@ -36,6 +36,6 @@ class SessionService (
 
     fun hasLogin(id: Long): Boolean = redisTemplate.hasKey(id.toString())
 
-    fun findMemberId(uuid: String): Long = redisTemplate.opsForValue().get(uuid) as Long
-    fun findUuid(id: Long): String = redisTemplate.opsForValue().get(id.toString()).toString()
+    fun findMemberId(uuid: String): Long? = (redisTemplate.opsForValue().get(SESSION_PREFIX + uuid) as Number?)?.toLong()
+    fun findUuid(id: Long): String? = redisTemplate.opsForValue().get(LOGIN_PREFIX + id) as String?
 }

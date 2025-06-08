@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Profile
 import java.io.File
 
 @Configuration
-@Profile("local | test")
+@Profile("local")
 class DockerRunner {
 
     private lateinit var dockerProcess: Process

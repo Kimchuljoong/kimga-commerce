@@ -1,19 +1,18 @@
 package kr.co.kimga.member.domain.entity
 
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
+import jakarta.persistence.*
 import kr.co.kimga.member.domain.dto.ModifyMemberRequestDto
 import java.time.Instant
-
 
 @Entity
 data class Member (
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
+
+    @Column(unique = true)
     val email: String = "",
+
     val password: String = "",
     var name: String = "",
     val createdAt: Instant = Instant.now(),
