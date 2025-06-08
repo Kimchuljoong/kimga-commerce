@@ -1,6 +1,7 @@
 package kr.co.kimga.member.application.auth
 
 import kr.co.kimga.member.application.auth.dto.LoginRequestDto
+import kr.co.kimga.member.application.auth.dto.TokenDto
 import kr.co.kimga.member.application.auth.dto.LogoutRequestDto
 import kr.co.kimga.member.application.auth.dto.RefreshRequestDto
 import kr.co.kimga.member.domain.exception.CanNotRefreshTokenException
@@ -19,13 +20,13 @@ class AuthFacade (
     private val tokenService: TokenService
 ) {
 
-    fun login(loginRequest: LoginRequestDto) : Pair<String, String> {
+    fun login(loginRequest: LoginRequestDto) : TokenDto {
         val authenticatedMember = memberAuthService.authenticate(loginRequest.email, loginRequest.password)
         val uuid = Utils.generateUuid()
         val (accessToken, refreshToken) = tokenService.makeNewToken(uuid)
         sessionService.removeSessionById(authenticatedMember.id)
         sessionService.saveSession(authenticatedMember.id, uuid)
-        return Pair(accessToken, refreshToken)
+        return TokenDto(accessToken, refreshToken)
     }
 
     fun logout(logoutRequestDto: LogoutRequestDto) {
@@ -34,7 +35,7 @@ class AuthFacade (
         }
     }
 
-    fun refresh(refreshRequestDto: RefreshRequestDto) : Pair<String, String> {
+    fun refresh(refreshRequestDto: RefreshRequestDto) : TokenDto {
         if (!sessionService.hasSession(refreshRequestDto.uuid)) {
             throw CanNotRefreshTokenException()
         }
@@ -43,7 +44,7 @@ class AuthFacade (
         val (newAccessToken, newRefreshToken) = tokenService.renewToken(refreshRequestDto.accessToken, refreshRequestDto.refreshToken, uuid)
         sessionService.removeSessionByUuid(refreshRequestDto.uuid)
         sessionService.saveSession(id, uuid)
-        return Pair(newAccessToken, newRefreshToken)
+        return TokenDto(newAccessToken, newRefreshToken)
     }
 
 }
