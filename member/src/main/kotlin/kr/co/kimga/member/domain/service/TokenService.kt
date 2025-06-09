@@ -2,8 +2,6 @@ package kr.co.kimga.member.domain.service
 
 import io.jsonwebtoken.Claims
 import kr.co.kimga.member.domain.exception.CanNotRenewTokenException
-import kr.co.kimga.member.infrastructure.common.Utils
-import kr.co.kimga.member.infrastructure.security.jwt.AccessJwtProvider
 import kr.co.kimga.member.infrastructure.security.jwt.JwtProvider
 import kr.co.kimga.member.infrastructure.security.jwt.JwtValidationResult
 import lombok.RequiredArgsConstructor

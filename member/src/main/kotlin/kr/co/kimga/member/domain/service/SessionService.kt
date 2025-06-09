@@ -1,7 +1,6 @@
 package kr.co.kimga.member.domain.service
 
 import lombok.RequiredArgsConstructor
-import org.apache.kafka.common.protocol.types.Field.Bool
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.stereotype.Service
 

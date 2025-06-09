@@ -5,7 +5,6 @@ import kr.co.kimga.member.application.member.MemberFacade
 import kr.co.kimga.member.application.member.dto.JoinRequestDto
 import kr.co.kimga.member.application.member.dto.ModifyRequestDto
 import kr.co.kimga.member.application.member.dto.WithdrawalRequestDto
-import kr.co.kimga.member.infrastructure.context.MemberContext
 import kr.co.kimga.member.infrastructure.context.MemberContextHolder
 import kr.co.kimga.member.interfaces.controller.dto.MemberCreateRequestDto
 import kr.co.kimga.member.interfaces.controller.dto.MemberModifyRequestDto
