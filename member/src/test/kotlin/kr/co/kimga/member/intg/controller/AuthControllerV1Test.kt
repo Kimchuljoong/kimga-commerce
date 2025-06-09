@@ -1,14 +1,16 @@
 package kr.co.kimga.member.intg.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.redis.testcontainers.RedisContainer
 import kr.co.kimga.member.application.auth.dto.LoginRequestDto
 import kr.co.kimga.member.application.auth.dto.TokenDto
 import kr.co.kimga.member.domain.entity.Member
 import kr.co.kimga.member.infrastructure.repository.MemberJpaRepository
-import kr.co.kimga.member.intg.config.RedisTestConfig
 import kr.co.kimga.member.interfaces.controller.dto.AuthRefreshRequestDto
-import org.junit.jupiter.api.*
+import kr.co.kimga.member.intg.config.RedisTestConfig
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
@@ -22,7 +24,7 @@ import kotlin.test.assertNotEquals
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class AuthControllerV1Test: RedisTestConfig() { // 현재 개별 테스트 수행만 가능
+class AuthControllerV1Test : RedisTestConfig() { // 현재 개별 테스트 수행만 가능
 
     @Autowired
     lateinit var memberRepository: MemberJpaRepository
