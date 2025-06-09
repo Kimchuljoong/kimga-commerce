@@ -16,6 +16,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.http.MediaType
+import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.delete
 import org.springframework.test.web.servlet.post
@@ -24,7 +25,8 @@ import kotlin.test.assertNotEquals
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class AuthControllerV1Test : RedisTestConfig() { // 현재 개별 테스트 수행만 가능
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
+class AuthControllerV1Test : RedisTestConfig() {
 
     @Autowired
     lateinit var memberRepository: MemberJpaRepository
