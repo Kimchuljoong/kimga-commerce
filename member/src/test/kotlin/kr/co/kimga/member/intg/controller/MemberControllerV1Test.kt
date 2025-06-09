@@ -22,7 +22,7 @@ import kotlin.test.assertEquals
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class MemberControllerV1Test: RedisTestConfig() { // 현재 개별 테스트 수행만 가능
+class MemberControllerV1Test: RedisTestConfig() {
 
     private val email = "test@test.com"
     private val password = "test1234!@#$"

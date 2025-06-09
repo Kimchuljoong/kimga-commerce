@@ -24,7 +24,7 @@ import kotlin.test.assertNotEquals
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class AuthControllerV1Test : RedisTestConfig() { // 현재 개별 테스트 수행만 가능
+class AuthControllerV1Test : RedisTestConfig() {
 
     @Autowired
     lateinit var memberRepository: MemberJpaRepository
