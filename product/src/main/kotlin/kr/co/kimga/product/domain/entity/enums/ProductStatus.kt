@@ -1,4 +1,4 @@
-package kr.co.kimga.product.domain
+package kr.co.kimga.product.domain.entity.enums
 
 enum class ProductStatus(val value: String) {
     WAIT("wait"),

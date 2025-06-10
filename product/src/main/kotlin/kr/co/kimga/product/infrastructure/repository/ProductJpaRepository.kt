@@ -1,6 +1,6 @@
 package kr.co.kimga.product.infrastructure.repository
 
-import kr.co.kimga.product.domain.ProductStatus
+import kr.co.kimga.product.domain.entity.enums.ProductStatus
 import kr.co.kimga.product.domain.entity.Product
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository

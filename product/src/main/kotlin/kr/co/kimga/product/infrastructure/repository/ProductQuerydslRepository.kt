@@ -4,7 +4,7 @@ import com.querydsl.core.types.Order
 import com.querydsl.core.types.OrderSpecifier
 import com.querydsl.jpa.impl.JPAQueryFactory
 import jakarta.persistence.EntityManager
-import kr.co.kimga.product.domain.ProductStatus
+import kr.co.kimga.product.domain.entity.enums.ProductStatus
 import kr.co.kimga.product.domain.entity.Product
 import kr.co.kimga.product.domain.entity.QProduct
 import org.springframework.data.domain.Page
@@ -39,7 +39,7 @@ class ProductQuerydslRepository(
             )
             .fetch()
 
-        val total = query
+        val total = queryFactory
             .select(product.count())
             .from(product)
             .fetchOne() ?: 0L

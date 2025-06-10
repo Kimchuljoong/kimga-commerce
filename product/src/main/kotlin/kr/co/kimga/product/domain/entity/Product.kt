@@ -1,11 +1,11 @@
 package kr.co.kimga.product.domain.entity
 
 import jakarta.persistence.*
-import kr.co.kimga.product.domain.ProductStatus
+import kr.co.kimga.product.domain.entity.enums.ProductStatus
 import java.time.Instant
 
 @Entity
-class Product (
+class Product(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "product_id")
