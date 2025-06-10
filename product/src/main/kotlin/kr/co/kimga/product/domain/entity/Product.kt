@@ -1,10 +1,6 @@
 package kr.co.kimga.product.domain.entity
 
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
+import jakarta.persistence.*
 import kr.co.kimga.product.domain.ProductStatus
 import java.time.Instant
 
@@ -16,6 +12,8 @@ class Product (
     val id: Long? = null,
 
     val productName: String = "",
+
+    @Enumerated(EnumType.STRING)
     val productStatus: ProductStatus = ProductStatus.SALE,
     val price: Double = 0.0,
     val createdAt: Instant = Instant.now(),
