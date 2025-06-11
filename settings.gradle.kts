@@ -7,5 +7,6 @@ include(
     "db",
     "member",
     "order",
-    "coupon"
+    "coupon",
+    "product"
 )

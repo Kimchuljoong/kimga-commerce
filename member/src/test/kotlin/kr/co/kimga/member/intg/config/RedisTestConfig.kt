@@ -3,11 +3,14 @@ package kr.co.kimga.member.intg.config
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
 import org.testcontainers.containers.GenericContainer
+import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
 
 @Testcontainers
 abstract class RedisTestConfig {
     companion object {
+        @JvmStatic
+        @Container
         private val redis = GenericContainer("redis:6.2.7-alpine")
             .withExposedPorts(6379)
             .withReuse(true)

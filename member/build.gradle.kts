@@ -16,9 +16,4 @@ dependencies {
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("com.redis:testcontainers-redis:2.2.4")
-
-}
-
-tasks.withType<Test> {
-    maxParallelForks = 1
 }
