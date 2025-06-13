@@ -38,9 +38,6 @@ class Product(
 
     fun changePrice(newPrice: Double) {
         require(newPrice >= 0) { throw PriceCanNotChangeException() }
-        if (productStatus == ProductStatus.CLOSE) {
-            throw ProductStatusCanNotChangeException()
-        }
         price = newPrice
     }
 
