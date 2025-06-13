@@ -20,8 +20,12 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import java.util.*
 import kotlin.test.Test
+import kotlin.test.assertTrue
 
 @ExtendWith(MockKExtension::class)
 class ProductServiceTest {
@@ -201,6 +205,56 @@ class ProductServiceTest {
         // when
         // then
         assertThrows<ProductStatusCanNotChangeException> { productService.closeProduct(productId) }
+    }
+
+    @Test
+    @DisplayName("특정 키워드를 포함하는 상품 목록을 조회할 수 있다")
+    fun `can find products that contain specific keywords`() {
+
+        // given
+        val pageable: Pageable = PageRequest.of(0, 2)
+        val fakeProductList = listOf(
+            Product(id = 1L, productName = "초코 아이스크림", productStatus = ProductStatus.SALE, price = 10_000.0),
+            Product(id = 2L, productName = "초코 바나나", productStatus = ProductStatus.SALE, price = 20_000.0)
+        )
+        val productPage = PageImpl(fakeProductList, pageable, 2)
+
+        every {
+            productQuerydslRepository.findProductsOnSale(any(), any())
+        } returns productPage
+
+        // when
+        val resultProductList = productService.findProductsOnSale("초코", pageable)
+
+        // then
+        assertEquals(2, resultProductList.content.size)
+        assertTrue(resultProductList.content[0].productName.contains("초코"))
+    }
+
+    @Test
+    @DisplayName("상품 목록을 조회할 수 있다")
+    fun `can find products`() {
+
+        // given
+        val pageable: Pageable = PageRequest.of(0, 4)
+        val fakeProductList = listOf(
+            Product(id = 1L, productName = "초코 아이스크림", productStatus = ProductStatus.SALE, price = 10_000.0),
+            Product(id = 2L, productName = "초코 바나나", productStatus = ProductStatus.SALE, price = 15_000.0),
+            Product(id = 3L, productName = "딸기 바나나", productStatus = ProductStatus.SALE, price = 12_000.0),
+            Product(id = 4L, productName = "딸기 음료수", productStatus = ProductStatus.SALE, price = 3000.0)
+        )
+        val productPage = PageImpl(fakeProductList, pageable, 4)
+
+        every {
+            productQuerydslRepository.findProductsOnSale(any(), any())
+        } returns productPage
+
+        // when
+        val resultProductList = productService.findProductsOnSale("", pageable)
+
+        // then
+        assertEquals(4, resultProductList.content.size)
+        assertEquals(1, resultProductList.totalPages)
     }
 
 }

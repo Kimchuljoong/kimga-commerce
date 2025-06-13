@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository
 
 @Repository
 class ProductQuerydslRepository(
-    private val entityManager: EntityManager
+    entityManager: EntityManager
 ) {
 
     private val queryFactory = JPAQueryFactory(entityManager)

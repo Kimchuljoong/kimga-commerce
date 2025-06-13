@@ -47,7 +47,7 @@ class ProductService (
         findProduct.changePrice(modifyProductDto.price)
     }
 
-    fun findProductsByProductStatus(productName: String, pageable: Pageable) =
+    fun findProductsOnSale(productName: String, pageable: Pageable) =
         productQuerydslRepository.findProductsOnSale(productName, pageable)
 
 }
