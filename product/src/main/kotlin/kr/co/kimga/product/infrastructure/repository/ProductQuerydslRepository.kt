@@ -19,7 +19,7 @@ class ProductQuerydslRepository(
 
     private val queryFactory = JPAQueryFactory(entityManager)
 
-    fun findProductsOnSale(productName: String, pageable: Pageable): Page<Product> {
+    fun findProducts(productName: String, productStatue: ProductStatus?, pageable: Pageable): Page<Product> {
         val product = QProduct.product
 
         val query = queryFactory
@@ -28,15 +28,15 @@ class ProductQuerydslRepository(
                 productName.takeIf { it.isNotBlank() }.let {
                     product.productName.like("%$productName%")
                 },
-                product.productStatus.eq(ProductStatus.SALE)
+                productStatue?.let {
+                    product.productStatus.eq(it)
+                }
             )
 
         val fetchedProducts = query
             .offset(pageable.offset)
             .limit(pageable.pageSize.toLong())
-            .orderBy(
-                OrderSpecifier(Order.DESC, product.id)
-            )
+            .orderBy(product.id.desc())
             .fetch()
 
         val total = queryFactory

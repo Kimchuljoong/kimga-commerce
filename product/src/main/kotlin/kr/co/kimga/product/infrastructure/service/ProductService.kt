@@ -1,13 +1,14 @@
 package kr.co.kimga.product.infrastructure.service
 
-import jakarta.persistence.EntityNotFoundException
-import kr.co.kimga.product.domain.entity.Product
+import kr.co.kimga.product.domain.entity.enums.ProductStatus
 import kr.co.kimga.product.domain.exception.ProductNotFoundException
 import kr.co.kimga.product.infrastructure.repository.ProductJpaRepository
 import kr.co.kimga.product.infrastructure.repository.ProductQuerydslRepository
 import kr.co.kimga.product.infrastructure.service.dto.EnrollProductDto
 import kr.co.kimga.product.infrastructure.service.dto.ModifyProductDto
+import kr.co.kimga.product.infrastructure.service.dto.ProductDto
 import lombok.RequiredArgsConstructor
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -47,7 +48,12 @@ class ProductService (
         findProduct.changePrice(modifyProductDto.price)
     }
 
-    fun findProductsOnSale(productName: String, pageable: Pageable) =
-        productQuerydslRepository.findProductsOnSale(productName, pageable)
-
+    fun findProductsOnSale(productName: String, pageable: Pageable): Page<ProductDto> {
+        val pagedProducts = productQuerydslRepository.findProducts(productName, ProductStatus.SALE, pageable)
+        return pagedProducts.map { ProductDto.of(it) }
+    }
+    fun findProduct(productId: Long): ProductDto {
+        val product = productRepository.findById(productId).orElseThrow { throw ProductNotFoundException() }
+        return ProductDto.of(product)
+    }
 }

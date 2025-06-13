@@ -6,7 +6,4 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface ProductJpaRepository : JpaRepository<Product, Long> {
-
-    fun findProductsByProductStatus(productStatus: ProductStatus)
-}
+interface ProductJpaRepository : JpaRepository<Product, Long>

@@ -220,7 +220,7 @@ class ProductServiceTest {
         val productPage = PageImpl(fakeProductList, pageable, 2)
 
         every {
-            productQuerydslRepository.findProductsOnSale(any(), any())
+            productQuerydslRepository.findProducts(any(), any(), any())
         } returns productPage
 
         // when
@@ -246,7 +246,7 @@ class ProductServiceTest {
         val productPage = PageImpl(fakeProductList, pageable, 4)
 
         every {
-            productQuerydslRepository.findProductsOnSale(any(), any())
+            productQuerydslRepository.findProducts(any(), any(), any())
         } returns productPage
 
         // when
@@ -255,6 +255,25 @@ class ProductServiceTest {
         // then
         assertEquals(4, resultProductList.content.size)
         assertEquals(1, resultProductList.totalPages)
+    }
+
+    @Test
+    @DisplayName("상품 정보를 저회할 수 있다")
+    fun `find product`() {
+
+        // given
+        val productId = 2L
+        val fakeProduct = Product(id = 2L, productName = "초코 바나나", productStatus = ProductStatus.SALE, price = 15_000.0)
+
+        every {
+            productRepository.findById(any())
+        } returns Optional.of(fakeProduct)
+
+        // when
+        val product = productService.findProduct(productId)
+
+        // then
+        assertEquals(productId, product.productId)
     }
 
 }

@@ -56,7 +56,7 @@ class ProductRepositoryTest @Autowired constructor(
         val pageable = PageRequest.of(0, 3)
 
         // when
-        val findProductsOnSale = productQuerydslRepository.findProductsOnSale(searchProductName, pageable)
+        val findProductsOnSale = productQuerydslRepository.findProducts(searchProductName, ProductStatus.SALE, pageable)
 
         // then
         assertEquals(2, findProductsOnSale.totalPages)
