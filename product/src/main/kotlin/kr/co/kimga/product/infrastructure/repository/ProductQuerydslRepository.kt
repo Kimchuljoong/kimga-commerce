@@ -2,6 +2,7 @@ package kr.co.kimga.product.infrastructure.repository
 
 import com.querydsl.core.types.Order
 import com.querydsl.core.types.OrderSpecifier
+import com.querydsl.core.types.dsl.EntityPathBase
 import com.querydsl.jpa.impl.JPAQueryFactory
 import jakarta.persistence.EntityManager
 import kr.co.kimga.product.domain.entity.enums.ProductStatus
