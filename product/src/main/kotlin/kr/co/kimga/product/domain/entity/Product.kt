@@ -42,7 +42,8 @@ class Product(
     }
 
     fun changeProductName(newName: String) {
-        productName = newName
+        if (productName.isNotBlank())
+            productName = newName
     }
 
     private fun requireStatus(vararg allowed: ProductStatus) {

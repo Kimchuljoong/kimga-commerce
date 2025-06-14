@@ -224,7 +224,7 @@ class ProductServiceTest {
         } returns productPage
 
         // when
-        val resultProductList = productService.findProductsOnSale("초코", pageable)
+        val resultProductList = productService.findProducts("초코", ProductStatus.SALE, pageable)
 
         // then
         assertEquals(2, resultProductList.content.size)
@@ -250,7 +250,7 @@ class ProductServiceTest {
         } returns productPage
 
         // when
-        val resultProductList = productService.findProductsOnSale("", pageable)
+        val resultProductList = productService.findProducts("", ProductStatus.SALE, pageable)
 
         // then
         assertEquals(4, resultProductList.content.size)

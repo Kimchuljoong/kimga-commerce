@@ -20,6 +20,17 @@ class ProductService (
     private val productRepository: ProductJpaRepository
 ) {
 
+    fun findProducts(productName: String, productStatue: ProductStatus?, pageable: Pageable): Page<ProductDto> {
+        val pagedProducts = productQuerydslRepository.findProducts(productName, productStatue, pageable)
+        return pagedProducts.map { ProductDto.of(it) }
+    }
+
+    fun findProduct(productId: Long): ProductDto {
+        val product = productRepository.findById(productId)
+            .orElseThrow { throw ProductNotFoundException() }
+        return ProductDto.of(product)
+    }
+
     @Transactional
     fun enrollProduct(enrollProductDto: EnrollProductDto) {
         val newProduct = enrollProductDto.toEntity()
@@ -46,14 +57,5 @@ class ProductService (
             productRepository.findById(modifyProductDto.productId).orElseThrow { throw ProductNotFoundException() }
         findProduct.changeProductName(modifyProductDto.productName)
         findProduct.changePrice(modifyProductDto.price)
-    }
-
-    fun findProductsOnSale(productName: String, pageable: Pageable): Page<ProductDto> {
-        val pagedProducts = productQuerydslRepository.findProducts(productName, ProductStatus.SALE, pageable)
-        return pagedProducts.map { ProductDto.of(it) }
-    }
-    fun findProduct(productId: Long): ProductDto {
-        val product = productRepository.findById(productId).orElseThrow { throw ProductNotFoundException() }
-        return ProductDto.of(product)
     }
 }
