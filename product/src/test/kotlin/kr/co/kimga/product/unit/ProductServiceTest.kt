@@ -258,7 +258,7 @@ class ProductServiceTest {
     }
 
     @Test
-    @DisplayName("상품 정보를 저회할 수 있다")
+    @DisplayName("상품 정보를 조회할 수 있다")
     fun `find product`() {
 
         // given
