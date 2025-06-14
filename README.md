@@ -2,7 +2,7 @@
 
 ### 모듈
 1. member(회원) In Develop
-2. product(상품) In Develop
+2. product(상품) Complete
 3. order(주문) Todo
 4. coupon(쿠폰) Todo
 5. common(공통) Todo
