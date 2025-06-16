@@ -2,6 +2,7 @@ package kr.co.kimga.member.domain.service
 
 import kr.co.kimga.member.domain.dto.CreateAccountDto
 import kr.co.kimga.member.domain.dto.DepositAccountDto
+import kr.co.kimga.member.domain.dto.MemberAccountDto
 import kr.co.kimga.member.domain.dto.WithdrawAccountDto
 import kr.co.kimga.member.domain.entity.Account
 import kr.co.kimga.member.domain.entity.enums.AccountType
@@ -18,8 +19,16 @@ class AccountService(
     private val accountRepository: AccountJpaRepository
 ) {
 
-    fun findAllAccounts(): List<Account> {
-        return accountRepository.findAll()
+    fun findMemberAllAccounts(memberId: Long): List<MemberAccountDto> {
+        return accountRepository.findAccountsByMemberId(memberId).map {
+            MemberAccountDto(it.id!!, it.accountType!!, it.balance)
+        }
+    }
+
+    fun findMemberAccount(memberId: Long, accountType: AccountType): MemberAccountDto {
+        val findAccount = findAccount(memberId, accountType)
+        return MemberAccountDto.of(findAccount)
+
     }
 
     @Transactional

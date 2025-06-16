@@ -9,4 +9,6 @@ import org.springframework.stereotype.Repository
 interface AccountJpaRepository: JpaRepository<Account, Long> {
 
     fun findAccountByMemberIdAndAccountType(memberId: Long, accountType: AccountType): Account?
+
+    fun findAccountsByMemberId(memberId: Long): List<Account>
 }
