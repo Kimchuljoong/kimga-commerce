@@ -1,9 +1,9 @@
 package kr.co.kimga.member.domain.service
 
 import kr.co.kimga.member.domain.dto.CreateAccountDto
-import kr.co.kimga.member.domain.dto.DepositAccountDto
+import kr.co.kimga.member.domain.dto.IncreaseAccountDto
 import kr.co.kimga.member.domain.dto.MemberAccountDto
-import kr.co.kimga.member.domain.dto.WithdrawAccountDto
+import kr.co.kimga.member.domain.dto.DecreaseAccountDto
 import kr.co.kimga.member.domain.entity.Account
 import kr.co.kimga.member.domain.entity.enums.AccountType
 import kr.co.kimga.member.domain.exception.AccountAlreadyCreatedException
@@ -38,15 +38,15 @@ class AccountService(
     }
 
     @Transactional
-    fun depositAccount(depositAccountDto: DepositAccountDto) {
-        val account = findAccount(depositAccountDto.memberId, depositAccountDto.accountType)
-        account.increaseAmount(depositAccountDto.amount)
+    fun increaseAccount(increaseAccountDto: IncreaseAccountDto) {
+        val account = findAccount(increaseAccountDto.memberId, increaseAccountDto.accountType)
+        account.increaseAmount(increaseAccountDto.amount)
     }
 
     @Transactional
-    fun withdrawAccount(withdrawAccountDto: WithdrawAccountDto) {
-        val account = findAccount(withdrawAccountDto.memberId, withdrawAccountDto.accountType)
-        account.decreaseAmount(withdrawAccountDto.amount)
+    fun decreaseAccount(decreaseAccountDto: DecreaseAccountDto) {
+        val account = findAccount(decreaseAccountDto.memberId, decreaseAccountDto.accountType)
+        account.decreaseAmount(decreaseAccountDto.amount)
     }
 
     private fun checkAccountCreated(

@@ -1,8 +1,8 @@
 package kr.co.kimga.member.application.account
 
 import kr.co.kimga.member.domain.dto.CreateAccountDto
-import kr.co.kimga.member.domain.dto.DepositAccountDto
-import kr.co.kimga.member.domain.dto.WithdrawAccountDto
+import kr.co.kimga.member.domain.dto.IncreaseAccountDto
+import kr.co.kimga.member.domain.dto.DecreaseAccountDto
 import kr.co.kimga.member.domain.entity.enums.AccountType
 import kr.co.kimga.member.domain.service.AccountService
 import lombok.RequiredArgsConstructor
@@ -23,9 +23,9 @@ class AccountFacade (
     fun createAccount(createAccountDto: CreateAccountDto) = accountService.createAccount(createAccountDto)
 
     @Transactional
-    fun increaseAccount(depositAccountDto: DepositAccountDto) = accountService.depositAccount(depositAccountDto)
+    fun increaseAccount(increaseAccountDto: IncreaseAccountDto) = accountService.increaseAccount(increaseAccountDto)
 
     @Transactional
-    fun decreaseAccount(withdrawAccountDto: WithdrawAccountDto) = accountService.withdrawAccount(withdrawAccountDto)
+    fun decreaseAccount(decreaseAccountDto: DecreaseAccountDto) = accountService.decreaseAccount(decreaseAccountDto)
 
 }

@@ -3,8 +3,8 @@ package kr.co.kimga.member.unit
 import io.mockk.every
 import io.mockk.mockk
 import kr.co.kimga.member.domain.dto.CreateAccountDto
-import kr.co.kimga.member.domain.dto.DepositAccountDto
-import kr.co.kimga.member.domain.dto.WithdrawAccountDto
+import kr.co.kimga.member.domain.dto.IncreaseAccountDto
+import kr.co.kimga.member.domain.dto.DecreaseAccountDto
 import kr.co.kimga.member.domain.entity.Account
 import kr.co.kimga.member.domain.entity.enums.AccountType
 import kr.co.kimga.member.domain.exception.AccountAlreadyCreatedException
@@ -72,14 +72,14 @@ class AccountServiceTest {
         val type = AccountType.DEPOSIT
         val amount = 10.0
         val fakeAccount = Account(1L, memberId, type)
-        val depositAccountDto = DepositAccountDto(memberId, AccountType.DEPOSIT, amount)
+        val increaseAccountDto = IncreaseAccountDto(memberId, AccountType.DEPOSIT, amount)
 
         every {
             accountRepository.findAccountByMemberIdAndAccountType(any(), any())
         } returns fakeAccount
 
         // when
-        accountService.depositAccount(depositAccountDto)
+        accountService.increaseAccount(increaseAccountDto)
 
         // then
         assertEquals(amount, fakeAccount.balance)
@@ -95,14 +95,14 @@ class AccountServiceTest {
         val amount = 10.0
         val balance = 100.0
         val fakeAccount = Account(1L, memberId, type, balance)
-        val withdrawAccountDto = WithdrawAccountDto(memberId, AccountType.DEPOSIT, amount)
+        val decreaseAccountDto = DecreaseAccountDto(memberId, AccountType.DEPOSIT, amount)
 
         every {
             accountRepository.findAccountByMemberIdAndAccountType(any(), any())
         } returns fakeAccount
 
         // when
-        accountService.withdrawAccount(withdrawAccountDto)
+        accountService.decreaseAccount(decreaseAccountDto)
 
         // then
         assertEquals(balance - amount, fakeAccount.balance)

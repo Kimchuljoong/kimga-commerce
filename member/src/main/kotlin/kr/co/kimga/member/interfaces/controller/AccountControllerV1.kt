@@ -2,8 +2,8 @@ package kr.co.kimga.member.interfaces.controller
 
 import kr.co.kimga.member.application.account.AccountFacade
 import kr.co.kimga.member.domain.dto.CreateAccountDto
-import kr.co.kimga.member.domain.dto.DepositAccountDto
-import kr.co.kimga.member.domain.dto.WithdrawAccountDto
+import kr.co.kimga.member.domain.dto.IncreaseAccountDto
+import kr.co.kimga.member.domain.dto.DecreaseAccountDto
 import kr.co.kimga.member.domain.entity.enums.AccountType
 import lombok.RequiredArgsConstructor
 import org.springframework.web.bind.annotation.*
@@ -26,19 +26,19 @@ class AccountControllerV1(
         @PathVariable("accountType") accountType: AccountType
     ) = accountFacade.findMemberAccount(memberId, accountType)
 
-    @PostMapping("/account")
+    @PostMapping("")
     fun createAccount(
         @RequestBody createAccountDto: CreateAccountDto
     ) = accountFacade.createAccount(createAccountDto)
 
-    @PostMapping("/account/deposit")
-    fun deposit(
-        @RequestBody depositAccountDto: DepositAccountDto
-    ) = accountFacade.increaseAccount(depositAccountDto)
+    @PostMapping("/increase")
+    fun increase(
+        @RequestBody increaseAccountDto: IncreaseAccountDto
+    ) = accountFacade.increaseAccount(increaseAccountDto)
 
-    @PostMapping("/account/withdrawal")
-    fun withdrawal(
-        @RequestBody withdrawAccountDto: WithdrawAccountDto
-    ) = accountFacade.decreaseAccount(withdrawAccountDto)
+    @PostMapping("/decrease")
+    fun decrease(
+        @RequestBody decreaseAccountDto: DecreaseAccountDto
+    ) = accountFacade.decreaseAccount(decreaseAccountDto)
 
 }
