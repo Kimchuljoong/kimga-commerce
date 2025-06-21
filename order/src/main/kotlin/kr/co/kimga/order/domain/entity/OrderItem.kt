@@ -1,32 +1,34 @@
 package kr.co.kimga.order.domain.entity
 
 import jakarta.persistence.*
-import kr.co.kimga.order.domain.entity.enums.PayMethod
-import kr.co.kimga.order.domain.entity.enums.PayStatus
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import java.time.Instant
 
 @Entity
-@Table(name = "orderpays")
-data class OrderPay(
+@Table(name = "orderitems")
+data class OrderItem (
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
-    @Column(nullable = false)
-    val payMethod: PayMethod? = null,
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    val order: Order? = null,
 
-    val discountAmount: Double = 0.0,
-    val amount: Double = 0.0,
+    @Column(nullable = false)
+    val productId: Long? = null,
+
+    val productName: String = "",
+    val price: Double = 0.0,
     val vat: Double = 0.0,
 
-    @Column(nullable = false)
-    val status: PayStatus? = null,
+    val quantity: Long = 0,
 
     @CreatedDate
     val createdAt: Instant = Instant.now(),
 
     @LastModifiedDate
-    val modifiedAt: Instant = Instant.now(),
+    val modifiedAt: Instant = Instant.now()
 )

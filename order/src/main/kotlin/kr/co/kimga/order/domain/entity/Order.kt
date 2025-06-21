@@ -18,7 +18,10 @@ data class Order(
     val orderDate: Instant = Instant.now(),
 
     @OneToMany(mappedBy= "order",  fetch = FetchType.LAZY)
-    val pays: List<OrderPay> = emptyList(),
+    val orderPays: MutableList<OrderPay> = mutableListOf(),
+
+    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
+    val items: MutableList<OrderItem> = mutableListOf(),
 
     @CreatedDate
     val createdAt: Instant = Instant.now(),
