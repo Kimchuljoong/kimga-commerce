@@ -14,7 +14,7 @@ data class OrderItem (
     val id: Long? = null,
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "order_id", nullable = false)
     val order: Order? = null,
 
     @Column(nullable = false)
@@ -27,8 +27,8 @@ data class OrderItem (
     val quantity: Long = 0,
 
     @CreatedDate
-    val createdAt: Instant = Instant.now(),
+    val createdAt: Instant? = null,
 
     @LastModifiedDate
-    val modifiedAt: Instant = Instant.now()
+    val modifiedAt: Instant? = null
 )

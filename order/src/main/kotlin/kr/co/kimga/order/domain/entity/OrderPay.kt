@@ -14,8 +14,13 @@ data class OrderPay(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id", nullable = false)
+    val order: Order? = null,
+
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    val payMethod: PayMethod? = null,
+    var payMethod: PayMethod? = null,
 
     val discountAmount: Double = 0.0,
     val amount: Double = 0.0,
