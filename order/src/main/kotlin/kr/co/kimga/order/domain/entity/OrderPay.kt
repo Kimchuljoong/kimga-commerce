@@ -3,13 +3,14 @@ package kr.co.kimga.order.domain.entity
 import jakarta.persistence.*
 import kr.co.kimga.order.domain.entity.enums.PayMethod
 import kr.co.kimga.order.domain.entity.enums.PayStatus
+import kr.co.kimga.order.domain.exception.CanNotRefund
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import java.time.Instant
 
 @Entity
 @Table(name = "orderpays")
-data class OrderPay(
+class OrderPay(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
@@ -24,7 +25,7 @@ data class OrderPay(
 
     val discountAmount: Double = 0.0,
     val amount: Double = 0.0,
-    val vat: Double = 0.0,
+    var refundedAmount: Double = 0.0,
 
     @Column(nullable = false)
     val status: PayStatus? = null,
@@ -34,4 +35,21 @@ data class OrderPay(
 
     @LastModifiedDate
     val modifiedAt: Instant = Instant.now(),
-)
+) {
+    fun refund(amount: Double) {
+        if (refundedAmount + amount > this.amount)
+            throw CanNotRefund("환불 금액을 초과했습니다")
+        refundedAmount += amount
+    }
+
+    fun refund(amounts: List<Double>) {
+        val totalRefundAmount = amounts.sum()
+        if (refundedAmount + totalRefundAmount > this.amount)
+            throw CanNotRefund("환불 금액을 초과했습니다")
+        refundedAmount += totalRefundAmount
+    }
+
+    fun isFullyRefunded(): Boolean {
+        return amount == refundedAmount
+    }
+}

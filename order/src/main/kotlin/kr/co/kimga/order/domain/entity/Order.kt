@@ -13,7 +13,7 @@ import java.time.Instant
 @Entity
 @Table(name = "orders")
 @EntityListeners(AuditingEntityListener::class)
-data class Order(
+class Order(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
@@ -23,15 +23,16 @@ data class Order(
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    var status: OrderStatus = OrderStatus.PROCESSING,
+    var status: OrderStatus = OrderStatus.ORDERED,
 
+    @Column(nullable = false)
     val orderDate: Instant = Instant.now(),
 
     @OneToMany(mappedBy= "order",  fetch = FetchType.LAZY, cascade = [CascadeType.PERSIST])
     val orderPays: MutableList<OrderPay> = mutableListOf(),
 
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = [CascadeType.PERSIST])
-    val items: MutableList<OrderItem> = mutableListOf(),
+    val orderItems: MutableList<OrderItem> = mutableListOf(),
 
     @CreatedDate
     val createdAt: Instant? = null,
@@ -41,7 +42,6 @@ data class Order(
 ) {
     companion object {
         fun of(requestMakeOrderDto: RequestMakeOrderDto): Order {
-
             if (requestMakeOrderDto.orderPays.isEmpty()) {
                 throw CanNotCreateOrderException()
             }
@@ -55,7 +55,6 @@ data class Order(
                     payMethod = it.payMethod,
                     discountAmount = it.discountAmount,
                     amount = it.amount,
-                    vat = it.vat,
                     status = it.status,
                 )
             }.toMutableList()
@@ -74,15 +73,15 @@ data class Order(
                 memberId = requestMakeOrderDto.memberId,
                 orderDate = requestMakeOrderDto.orderDate,
                 orderPays = orderPays,
-                items = orderItems
+                orderItems = orderItems
             )
         }
     }
 
     fun cancel() {
-        if (status !in listOf(OrderStatus.PROCESSING, OrderStatus.PAID)) {
+        if (status !in listOf(OrderStatus.PAID))
             throw CanNotChangeOrderStatus()
-        }
+
         status = OrderStatus.CANCELLED
     }
 }

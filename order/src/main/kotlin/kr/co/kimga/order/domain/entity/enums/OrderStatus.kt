@@ -1,7 +1,7 @@
 package kr.co.kimga.order.domain.entity.enums
 
 enum class OrderStatus(val value: String) {
-    PROCESSING("Processing"),
+    ORDERED("Ordered"),
     PAID("Paid"),
     SHIPPED("Shipped"),
     DELIVERED("Delivered"),

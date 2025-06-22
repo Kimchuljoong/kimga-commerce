@@ -1,13 +1,14 @@
 package kr.co.kimga.order.domain.entity
 
 import jakarta.persistence.*
+import kr.co.kimga.order.domain.exception.CanNotCancelItem
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import java.time.Instant
 
 @Entity
 @Table(name = "orderitems")
-data class OrderItem (
+class OrderItem(
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,9 +27,21 @@ data class OrderItem (
 
     val quantity: Long = 0,
 
+    var canceledQuantity: Long = 0,
+
     @CreatedDate
     val createdAt: Instant? = null,
 
     @LastModifiedDate
     val modifiedAt: Instant? = null
-)
+) {
+    fun cancel(quantity: Long) {
+        if (canceledQuantity + quantity > this.quantity)
+            throw CanNotCancelItem("취소 수량을 초과했습니다")
+        canceledQuantity += quantity
+    }
+
+    fun isFullyCanceled(): Boolean {
+        return quantity == canceledQuantity
+    }
+}
