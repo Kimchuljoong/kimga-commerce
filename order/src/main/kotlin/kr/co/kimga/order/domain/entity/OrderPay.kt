@@ -52,4 +52,8 @@ class OrderPay(
     fun isFullyRefunded(): Boolean {
         return amount == refundedAmount
     }
+
+    fun remainAmount(): Double {
+        return amount - refundedAmount
+    }
 }
