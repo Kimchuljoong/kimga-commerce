@@ -44,4 +44,8 @@ class OrderItem(
     fun isFullyCanceled(): Boolean {
         return quantity == canceledQuantity
     }
+
+    fun remainQuantity(): Long {
+        return quantity - canceledQuantity
+    }
 }

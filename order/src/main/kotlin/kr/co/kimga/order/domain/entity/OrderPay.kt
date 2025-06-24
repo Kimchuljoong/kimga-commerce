@@ -25,6 +25,7 @@ class OrderPay(
 
     val discountAmount: Double = 0.0,
     val amount: Double = 0.0,
+    val canceledDiscountAmount: Double = 0.0,
     var refundedAmount: Double = 0.0,
 
     @Column(nullable = false)

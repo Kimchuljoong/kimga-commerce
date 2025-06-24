@@ -1,17 +1,11 @@
 package kr.co.kimga.order.infrastructure.service
 
-import com.querydsl.core.QueryFactory
-import com.querydsl.jpa.impl.JPAQueryFactory
 import kr.co.kimga.order.domain.entity.Order
-import kr.co.kimga.order.domain.entity.QOrder
 import kr.co.kimga.order.infrastructure.exception.CanNotFindOrder
 import kr.co.kimga.order.infrastructure.repository.OrderJpaRepository
 import kr.co.kimga.order.infrastructure.repository.OrderQuerydslRepository
-import kr.co.kimga.order.infrastructure.service.dto.FindOrderDto
-import kr.co.kimga.order.infrastructure.service.dto.RequestFindOrdersDto
-import kr.co.kimga.order.infrastructure.service.dto.RequestMakeOrderDto
+import kr.co.kimga.order.infrastructure.service.dto.*
 import lombok.RequiredArgsConstructor
-import org.hibernate.annotations.processing.Find
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
@@ -25,8 +19,8 @@ class OrderService(
 ) {
 
     @Transactional
-    fun createOrder(requestMakeOrderDto: RequestMakeOrderDto) {
-        val newOrder = Order.of(requestMakeOrderDto)
+    fun createOrder(requestCreateOrderDto: RequestCreateOrderDto) {
+        val newOrder = Order.of(requestCreateOrderDto)
         orderRepository.save(newOrder)
     }
 
@@ -49,7 +43,7 @@ class OrderService(
             pageable
         )
 
-        return findOrders.map {
+        return findOrders.map { it ->
             FindOrderDto(
                 orderId = it.id!!,
                 memberId = it.memberId!!,
@@ -60,11 +54,25 @@ class OrderService(
         }
     }
 
-    fun findOrderDetails(orderId: Long): FindOrderDto? {
+    fun findOrderDetails(orderId: Long): FindOrderDetailsDto {
 
         val findOrder = orderRepository.findById(orderId)
             .orElseThrow { throw CanNotFindOrder() }
 
-        return null
+        return FindOrderDetailsDto(
+            orderId = findOrder.id!!,
+            orderStatus = findOrder.status,
+            orderDate = findOrder.orderDate,
+            items = findOrder.orderItems.map {
+                FindOrderItemDto(
+                    productId = it.productId!!,
+                    productName = it.productName,
+                    quantity = it.remainQuantity()
+                )
+            },
+            payedAmount = findOrder.orderPays.sumOf { it.amount },
+            discountAmount = findOrder.orderPays.sumOf { it.discountAmount },
+            totalAmount = findOrder.orderPays.sumOf { it.amount + it.discountAmount }
+        )
     }
 }

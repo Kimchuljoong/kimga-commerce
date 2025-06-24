@@ -4,7 +4,7 @@ import jakarta.persistence.*
 import kr.co.kimga.order.domain.entity.enums.OrderStatus
 import kr.co.kimga.order.domain.exception.CanNotChangeOrderStatus
 import kr.co.kimga.order.infrastructure.exception.CanNotCreateOrderException
-import kr.co.kimga.order.infrastructure.service.dto.RequestMakeOrderDto
+import kr.co.kimga.order.infrastructure.service.dto.RequestCreateOrderDto
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
@@ -41,16 +41,16 @@ open class Order(
     val modifiedAt: Instant? = null
 ) {
     companion object {
-        fun of(requestMakeOrderDto: RequestMakeOrderDto): Order {
-            if (requestMakeOrderDto.orderPays.isEmpty()) {
+        fun of(requestCreateOrderDto: RequestCreateOrderDto): Order {
+            if (requestCreateOrderDto.orderPays.isEmpty()) {
                 throw CanNotCreateOrderException()
             }
 
-            if (requestMakeOrderDto.orderItems.isEmpty()) {
+            if (requestCreateOrderDto.orderItems.isEmpty()) {
                 throw CanNotCreateOrderException()
             }
 
-            val orderPays = requestMakeOrderDto.orderPays.map {
+            val orderPays = requestCreateOrderDto.orderPays.map {
                 OrderPay(
                     payMethod = it.payMethod,
                     discountAmount = it.discountAmount,
@@ -59,19 +59,18 @@ open class Order(
                 )
             }.toMutableList()
 
-            val orderItems = requestMakeOrderDto.orderItems.map {
+            val orderItems = requestCreateOrderDto.orderItems.map {
                 OrderItem(
                     productId = it.productId,
                     productName = it.productName,
                     price = it.price,
-                    vat = it.vat,
                     quantity = it.quantity,
                 )
             }.toMutableList()
 
             return Order(
-                memberId = requestMakeOrderDto.memberId,
-                orderDate = requestMakeOrderDto.orderDate,
+                memberId = requestCreateOrderDto.memberId,
+                orderDate = requestCreateOrderDto.orderDate,
                 orderPays = orderPays,
                 orderItems = orderItems
             )

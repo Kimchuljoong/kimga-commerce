@@ -1,6 +1,6 @@
 package kr.co.kimga.order.infrastructure.service.dto
 
-data class RequestMakeOrderItemDto(
+data class RequestCreateOrderItemDto(
     val productId: Long,
     val productName: String,
     val price: Double,
