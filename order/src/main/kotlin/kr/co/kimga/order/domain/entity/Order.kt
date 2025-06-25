@@ -78,7 +78,7 @@ open class Order(
     }
 
     fun cancel() {
-        if (status !in listOf(OrderStatus.PAID))
+        if (status !in listOf(OrderStatus.ORDERED, OrderStatus.PAID))
             throw CanNotChangeOrderStatus()
 
         status = OrderStatus.CANCELLED
