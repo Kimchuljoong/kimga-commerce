@@ -22,6 +22,7 @@ import kr.co.kimga.order.infrastructure.service.dto.RequestCreateOrderPayDto
 import kr.co.kimga.order.infrastructure.service.dto.RequestFindOrdersDto
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertNotNull
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.data.domain.PageImpl
@@ -216,7 +217,83 @@ class OrderServiceTest {
     @DisplayName("주문 상세 정보를 조회할 수 있다")
     fun `can find order details`() {
 
-        //todo
+        // given
+        val orderId = 1L
+        val orderPays = listOf(
+            createTestOrderPay(),
+            createTestOrderPay(),
+        )
+        val orderItems = listOf(
+            createTestOrderItem(),
+            createTestOrderItem(),
+        )
+        val fakeOrder = createTestOrder(
+            id = orderId,
+            orderPays = orderPays,
+            orderItems = orderItems
+        )
+
+        every {
+            orderJpaRepository.findById(any())
+        } returns Optional.of(fakeOrder)
+
+        // when
+        val findOrderDetails = orderService.findOrderDetails(orderId)
+
+        // then
+        print(findOrderDetails)
+        assertNotNull(findOrderDetails)
+        assertEquals(orderId, findOrderDetails.orderId)
+        assertEquals(orderItems.size, findOrderDetails.items.size)
+        assertEquals(orderPays.sumOf { it.amount }, findOrderDetails.totalAmount)
     }
 
+    private fun createTestOrder(
+        id: Long? = null,
+        memberId: Long = 1L,
+        status: OrderStatus = OrderStatus.ORDERED,
+        orderDate: Instant = Instant.now(),
+        orderPays: List<OrderPay> = listOf(),
+        orderItems: List<OrderItem> = listOf()
+    ): Order {
+        return Order(
+            id = id,
+            memberId = memberId,
+            status = status,
+            orderDate = orderDate,
+            orderPays = orderPays.toMutableList<OrderPay>(),
+            orderItems = orderItems.toMutableList<OrderItem>(),
+        ).also {
+            it.orderPays.forEach { pay -> pay.order = it }
+            it.orderItems.forEach { item -> item.order = it }
+        }
+    }
+
+    private fun createTestOrderPay(
+        amount: Double = 1000.0,
+        discountAmount: Double = 0.0,
+        status: PayStatus = PayStatus.SUCCEED
+    ): OrderPay {
+        return OrderPay(
+            amount = amount,
+            discountAmount = discountAmount,
+            status = status
+        )
+    }
+
+    private fun createTestOrderItem(
+        productId: Long = 1L,
+        productName: String = "테스트상품",
+        quantity: Long = 1L,
+        price: Double = 1000.0,
+        vat: Double = 100.0
+    ): OrderItem {
+        return OrderItem(
+            productId = productId,
+            productName = productName,
+            quantity = quantity,
+            price = price,
+            vat = vat
+        )
+    }
 }

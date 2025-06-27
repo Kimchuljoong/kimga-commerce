@@ -13,7 +13,7 @@ import java.time.Instant
 @Entity
 @Table(name = "orders")
 @EntityListeners(AuditingEntityListener::class)
-open class Order(
+class Order(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,

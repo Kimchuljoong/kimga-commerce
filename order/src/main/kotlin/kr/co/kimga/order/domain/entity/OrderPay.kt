@@ -17,7 +17,7 @@ class OrderPay(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", nullable = false)
-    val order: Order? = null,
+    var order: Order? = null,
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
