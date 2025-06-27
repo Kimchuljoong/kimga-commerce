@@ -1,9 +1,9 @@
-package kr.co.kimga.order.domain.entity
+package kr.co.kimga.order.domain.entity.order
 
 import jakarta.persistence.*
-import kr.co.kimga.order.domain.entity.enums.PayMethod
-import kr.co.kimga.order.domain.entity.enums.PayStatus
-import kr.co.kimga.order.domain.exception.CanNotRefund
+import kr.co.kimga.order.domain.entity.order.enums.PayMethod
+import kr.co.kimga.order.domain.entity.order.enums.PayStatus
+import kr.co.kimga.order.domain.exception.order.CanNotRefund
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import java.time.Instant

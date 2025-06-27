@@ -1,7 +1,7 @@
-package kr.co.kimga.order.domain.entity
+package kr.co.kimga.order.domain.entity.order
 
 import jakarta.persistence.*
-import kr.co.kimga.order.domain.exception.CanNotCancelItem
+import kr.co.kimga.order.domain.exception.order.CanNotCancelItem
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import java.time.Instant

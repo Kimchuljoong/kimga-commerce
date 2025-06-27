@@ -1,6 +1,6 @@
-package kr.co.kimga.order.infrastructure.service.dto
+package kr.co.kimga.order.infrastructure.service.dto.order
 
-import kr.co.kimga.order.domain.entity.enums.OrderStatus
+import kr.co.kimga.order.domain.entity.order.enums.OrderStatus
 import java.time.Instant
 
 data class RequestFindOrdersDto(

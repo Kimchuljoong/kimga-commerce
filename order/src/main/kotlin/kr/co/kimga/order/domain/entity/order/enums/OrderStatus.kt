@@ -1,4 +1,4 @@
-package kr.co.kimga.order.domain.entity.enums
+package kr.co.kimga.order.domain.entity.order.enums
 
 enum class OrderStatus(val value: String) {
     ORDERED("Ordered"),

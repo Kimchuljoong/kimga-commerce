@@ -1,4 +1,4 @@
-package kr.co.kimga.order.infrastructure.service.dto
+package kr.co.kimga.order.infrastructure.service.dto.order
 
 import java.time.Instant
 

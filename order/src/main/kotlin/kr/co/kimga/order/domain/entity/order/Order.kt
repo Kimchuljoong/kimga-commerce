@@ -1,10 +1,10 @@
-package kr.co.kimga.order.domain.entity
+package kr.co.kimga.order.domain.entity.order
 
 import jakarta.persistence.*
-import kr.co.kimga.order.domain.entity.enums.OrderStatus
-import kr.co.kimga.order.domain.exception.CanNotChangeOrderStatus
-import kr.co.kimga.order.infrastructure.exception.CanNotCreateOrderException
-import kr.co.kimga.order.infrastructure.service.dto.RequestCreateOrderDto
+import kr.co.kimga.order.domain.entity.order.enums.OrderStatus
+import kr.co.kimga.order.domain.exception.order.CanNotChangeOrderStatus
+import kr.co.kimga.order.infrastructure.exception.order.CanNotCreateOrderException
+import kr.co.kimga.order.infrastructure.service.dto.order.RequestCreateOrderDto
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
