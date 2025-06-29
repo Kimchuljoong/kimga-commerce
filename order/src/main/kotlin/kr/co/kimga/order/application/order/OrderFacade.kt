@@ -1,5 +1,6 @@
 package kr.co.kimga.order.application.order
 
+import kr.co.kimga.order.common.annotation.DistributedLock
 import kr.co.kimga.order.infrastructure.service.order.OrderService
 import kr.co.kimga.order.infrastructure.service.stock.StockService
 import kr.co.kimga.order.infrastructure.service.order.dto.FindOrderDetailsDto
