@@ -1,4 +1,4 @@
-package kr.co.kimga.order.infrastructure.service.dto.order
+package kr.co.kimga.order.infrastructure.service.order.dto
 
 import kr.co.kimga.order.domain.entity.order.enums.OrderStatus
 import java.time.Instant

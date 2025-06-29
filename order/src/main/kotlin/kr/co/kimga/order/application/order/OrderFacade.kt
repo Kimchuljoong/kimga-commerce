@@ -1,11 +1,11 @@
 package kr.co.kimga.order.application.order
 
-import kr.co.kimga.order.infrastructure.service.OrderService
-import kr.co.kimga.order.infrastructure.service.StockService
-import kr.co.kimga.order.infrastructure.service.dto.order.FindOrderDetailsDto
-import kr.co.kimga.order.infrastructure.service.dto.order.FindOrderDto
-import kr.co.kimga.order.infrastructure.service.dto.order.RequestCreateOrderDto
-import kr.co.kimga.order.infrastructure.service.dto.order.RequestFindOrdersDto
+import kr.co.kimga.order.infrastructure.service.order.OrderService
+import kr.co.kimga.order.infrastructure.service.stock.StockService
+import kr.co.kimga.order.infrastructure.service.order.dto.FindOrderDetailsDto
+import kr.co.kimga.order.infrastructure.service.order.dto.FindOrderDto
+import kr.co.kimga.order.infrastructure.service.order.dto.RequestCreateOrderDto
+import kr.co.kimga.order.infrastructure.service.order.dto.RequestFindOrdersDto
 import lombok.RequiredArgsConstructor
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -30,11 +30,12 @@ class OrderFacade(
 
     @Transactional
     fun cancelOrder(orderId: Long) {
-        val findOrderDetails = orderService.findOrderDetails(orderId)
-        orderService.cancelOrder(orderId)
-        // todo 결제 취소
-        findOrderDetails.items.forEach {
-            stockService.restoreInventory(it.productId, it.quantity)
+        orderService.findOrderDetails(orderId).let {
+            // todo 결제 취소
+            orderService.cancelOrder(it.orderId)
+            it.items.forEach {
+                stockService.restoreInventory(it.productId, it.quantity)
+            }
         }
     }
 

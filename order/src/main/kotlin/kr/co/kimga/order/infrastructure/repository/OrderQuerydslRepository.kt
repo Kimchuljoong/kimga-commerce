@@ -4,7 +4,7 @@ import com.querydsl.core.types.dsl.BooleanExpression
 import com.querydsl.jpa.impl.JPAQueryFactory
 import jakarta.persistence.EntityManager
 import kr.co.kimga.order.domain.entity.order.Order
-import kr.co.kimga.order.domain.entity.QOrder
+import kr.co.kimga.order.domain.entity.order.QOrder
 import kr.co.kimga.order.domain.entity.order.enums.OrderStatus
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl

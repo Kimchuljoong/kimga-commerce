@@ -1,4 +1,4 @@
-package kr.co.kimga.order.infrastructure.service.dto.stock
+package kr.co.kimga.order.infrastructure.service.stock.dto
 
 class RequestCreateStockDto(
     val productId: Long,

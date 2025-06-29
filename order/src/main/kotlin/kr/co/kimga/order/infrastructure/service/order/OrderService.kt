@@ -1,10 +1,10 @@
-package kr.co.kimga.order.infrastructure.service
+package kr.co.kimga.order.infrastructure.service.order
 
 import kr.co.kimga.order.domain.entity.order.Order
 import kr.co.kimga.order.infrastructure.exception.order.CanNotFindOrder
 import kr.co.kimga.order.infrastructure.repository.OrderJpaRepository
 import kr.co.kimga.order.infrastructure.repository.OrderQuerydslRepository
-import kr.co.kimga.order.infrastructure.service.dto.order.*
+import kr.co.kimga.order.infrastructure.service.order.dto.*
 import lombok.RequiredArgsConstructor
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable

@@ -1,9 +1,9 @@
-package kr.co.kimga.order.infrastructure.service
+package kr.co.kimga.order.infrastructure.service.stock
 
 import kr.co.kimga.order.domain.entity.stock.Stock
 import kr.co.kimga.order.infrastructure.exception.stock.CanNotFindStock
 import kr.co.kimga.order.infrastructure.repository.StockJpaRepository
-import kr.co.kimga.order.infrastructure.service.dto.stock.RequestCreateStockDto
+import kr.co.kimga.order.infrastructure.service.stock.dto.RequestCreateStockDto
 import lombok.RequiredArgsConstructor
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -16,13 +16,13 @@ class StockService(
 
     @Transactional
     fun createStock(requestCreateStockDto: RequestCreateStockDto) {
-        val findStock = stockRepository
-
-        val newStock = Stock(
-            productId = requestCreateStockDto.productId,
-            totalInventory = requestCreateStockDto.stock,
-        )
-        stockRepository.save(newStock)
+        stockRepository.findStockByProductId(requestCreateStockDto.productId)
+            ?: run {
+                val newStock = Stock(
+                    productId = requestCreateStockDto.productId,
+                )
+                stockRepository.save(newStock)
+            }
     }
 
     @Transactional
@@ -37,6 +37,13 @@ class StockService(
         val findStock = stockRepository.findStockByProductId(productId)
             ?: throw CanNotFindStock()
         findStock.restoreInventory(quantity)
+    }
+
+    @Transactional
+    fun applyInventory(productId: Long, quantity: Long) {
+        val findStock = stockRepository.findStockByProductId(productId)
+            ?: throw CanNotFindStock()
+        findStock.applyInventory(quantity)
     }
 
     fun getAvailableProductInventory(productId: Long): Long {

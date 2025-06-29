@@ -6,7 +6,6 @@ import kr.co.kimga.order.infrastructure.exception.stock.CanNotRestoreStock
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
-import org.testcontainers.shaded.com.google.common.math.Quantiles
 import java.time.Instant
 
 @Entity
@@ -38,10 +37,6 @@ class Stock(
             throw CanNotAvailableInventory()
     }
 
-    fun getOrderedInventory(): Long {
-        return orderedInventory
-    }
-
     fun decreaseInventory(quantity: Long) {
         if (getAvailableInventory() - quantity <= 0)
             throw CanNotAvailableInventory()
@@ -54,4 +49,7 @@ class Stock(
         orderedInventory -= quantity
     }
 
+    fun applyInventory(quantity: Long) {
+        totalInventory += quantity
+    }
 }

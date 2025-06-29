@@ -4,7 +4,7 @@ import jakarta.persistence.*
 import kr.co.kimga.order.domain.entity.order.enums.OrderStatus
 import kr.co.kimga.order.domain.exception.order.CanNotChangeOrderStatus
 import kr.co.kimga.order.infrastructure.exception.order.CanNotCreateOrderException
-import kr.co.kimga.order.infrastructure.service.dto.order.RequestCreateOrderDto
+import kr.co.kimga.order.infrastructure.service.order.dto.RequestCreateOrderDto
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener

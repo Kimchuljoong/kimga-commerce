@@ -15,11 +15,11 @@ import kr.co.kimga.order.domain.entity.order.enums.PayStatus
 import kr.co.kimga.order.domain.exception.order.CanNotChangeOrderStatus
 import kr.co.kimga.order.infrastructure.repository.OrderJpaRepository
 import kr.co.kimga.order.infrastructure.repository.OrderQuerydslRepository
-import kr.co.kimga.order.infrastructure.service.OrderService
-import kr.co.kimga.order.infrastructure.service.dto.order.RequestCreateOrderDto
-import kr.co.kimga.order.infrastructure.service.dto.order.RequestCreateOrderItemDto
-import kr.co.kimga.order.infrastructure.service.dto.order.RequestCreateOrderPayDto
-import kr.co.kimga.order.infrastructure.service.dto.order.RequestFindOrdersDto
+import kr.co.kimga.order.infrastructure.service.order.OrderService
+import kr.co.kimga.order.infrastructure.service.order.dto.RequestCreateOrderDto
+import kr.co.kimga.order.infrastructure.service.order.dto.RequestCreateOrderItemDto
+import kr.co.kimga.order.infrastructure.service.order.dto.RequestCreateOrderPayDto
+import kr.co.kimga.order.infrastructure.service.order.dto.RequestFindOrdersDto
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertNotNull
