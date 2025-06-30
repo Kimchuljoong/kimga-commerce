@@ -1,6 +1,7 @@
 package kr.co.kimga.order.infrastructure.service.payment.enums
 
-enum class PaymentType {
-    CARD,
-    CASH,
+enum class PaymentProvider {
+    TOSS,
+    NICE,
+    KCP
 }

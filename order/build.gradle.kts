@@ -33,6 +33,8 @@ kapt {
 dependencies {
     implementation(project(":db"))
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.retry:spring-retry")
+    implementation("org.springframework.boot:spring-boot-starter-aop")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.redisson:redisson-spring-boot-starter:3.23.2")
