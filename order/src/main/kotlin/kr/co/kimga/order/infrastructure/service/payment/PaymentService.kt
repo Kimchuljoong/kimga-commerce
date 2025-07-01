@@ -1,7 +1,6 @@
 package kr.co.kimga.order.infrastructure.service.payment
 
-import kr.co.kimga.order.infrastructure.service.payment.dto.RequestCancelPayment
-import kr.co.kimga.order.infrastructure.service.payment.dto.RequestPayment
+import kr.co.kimga.order.infrastructure.service.payment.dto.*
 import kr.co.kimga.order.infrastructure.service.payment.enums.PaymentProvider
 import kr.co.kimga.order.infrastructure.service.payment.pg.PaymentProcessor
 import lombok.RequiredArgsConstructor
@@ -25,10 +24,10 @@ class PaymentService(
         maxAttempts = 3,
         backoff = Backoff(delay = 1000, multiplier = 1.5)
     )
-    fun makePayment(requestPayment: RequestPayment) {
+    fun makePayment(requestPayment: RequestPayment): PaymentResult {
         val processor = processors[requestPayment.provider]
             ?: throw IllegalStateException("Can not use payment processor: ${requestPayment.provider}")
-        processor.process(requestPayment)
+        return processor.process(requestPayment)
     }
 
     @Retryable(
@@ -36,10 +35,13 @@ class PaymentService(
         maxAttempts = 3,
         backoff = Backoff(delay = 1000, multiplier = 1.5)
     )
-    fun cancelPayment(requestCancelPayment: RequestCancelPayment) {
+    fun cancelPayment(requestCancelPayment: RequestCancelPayment): CancelPaymentResult {
         val processor = processors[requestCancelPayment.provider]
             ?: throw IllegalStateException("Can not use payment processor: ${requestCancelPayment.provider}")
-        processor.cancelProcess(requestCancelPayment)
+        return processor.cancelProcess(requestCancelPayment)
+    }
+
+    fun savePaymentResult(requestSavePaymentResult: RequestSavePaymentResult) {
 
     }
 }

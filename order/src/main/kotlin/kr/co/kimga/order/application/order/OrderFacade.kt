@@ -7,6 +7,10 @@ import kr.co.kimga.order.infrastructure.service.order.dto.FindOrderDetailsDto
 import kr.co.kimga.order.infrastructure.service.order.dto.FindOrderDto
 import kr.co.kimga.order.infrastructure.service.order.dto.RequestCreateOrderDto
 import kr.co.kimga.order.infrastructure.service.order.dto.RequestFindOrdersDto
+import kr.co.kimga.order.infrastructure.service.payment.PaymentService
+import kr.co.kimga.order.infrastructure.service.payment.dto.RequestPayment
+import kr.co.kimga.order.infrastructure.service.payment.enums.PaymentProvider
+import kr.co.kimga.order.infrastructure.service.payment.enums.PaymentType
 import lombok.RequiredArgsConstructor
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -17,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional
 @RequiredArgsConstructor
 class OrderFacade(
     private val orderService: OrderService,
+    private val paymentService: PaymentService,
     private val stockService: StockService
 ) {
 
@@ -25,8 +30,18 @@ class OrderFacade(
         requestCreateOrderDto.orderItems.forEach{
             stockService.decreaseInventory(it.productId, it.quantity)
         }
-        // todo 결제
-        orderService.createOrder(requestCreateOrderDto)
+        val orderId = orderService.createOrder(requestCreateOrderDto)
+
+        requestCreateOrderDto.orderPays.forEach {
+            val requestPayment = RequestPayment(
+                provider = PaymentProvider.valueOf(it.provider),
+                paymentType = PaymentType.valueOf(it.payMethod.value),
+                orderId = orderId,
+                amount = it.amount
+            )
+            paymentService.makePayment(requestPayment)
+        }
+
     }
 
     @Transactional

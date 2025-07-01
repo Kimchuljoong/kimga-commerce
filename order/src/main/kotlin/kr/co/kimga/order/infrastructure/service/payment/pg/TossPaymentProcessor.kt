@@ -13,16 +13,20 @@ class TossPaymentProcessor: PaymentProcessor {
 
     override fun process(request: RequestPayment): PaymentResult {
         randomFail()
-        return PaymentResult(result = "200")
+        val transactionId = makeRandomNumber()
+        return PaymentResult(result = "200", transactionId = transactionId)
     }
 
     override fun cancelProcess(request: RequestCancelPayment): CancelPaymentResult {
         randomFail()
-        return CancelPaymentResult(result = "200")
+        val transactionId = makeRandomNumber()
+        return CancelPaymentResult(result = "200", transactionId = transactionId)
     }
 
     private fun randomFail() {
         val chance = Random.nextDouble()
         if (chance < 0.2) throw RuntimeException("payment process failure occurred!")
     }
+
+    private fun makeRandomNumber() = System.currentTimeMillis().toString()
 }

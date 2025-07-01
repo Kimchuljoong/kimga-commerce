@@ -7,6 +7,6 @@ data class RequestPayment(
     val provider: PaymentProvider,
     val paymentType : PaymentType,
     val orderId: Long,
-    val amount: Long,
-    val options: PaymentOption
+    val amount: Double,
+    val options: PaymentOption? = null
 )

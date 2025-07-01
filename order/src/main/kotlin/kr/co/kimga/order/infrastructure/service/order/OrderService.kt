@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 
 @Service
@@ -18,10 +19,11 @@ class OrderService(
     private val orderQuerydslRepository: OrderQuerydslRepository
 ) {
 
-    @Transactional
-    fun createOrder(requestCreateOrderDto: RequestCreateOrderDto) {
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    fun createOrder(requestCreateOrderDto: RequestCreateOrderDto): Long {
         val newOrder = Order.of(requestCreateOrderDto)
-        orderRepository.save(newOrder)
+        val savedOrder = orderRepository.save(newOrder)
+        return savedOrder.id!!
     }
 
     @Transactional
