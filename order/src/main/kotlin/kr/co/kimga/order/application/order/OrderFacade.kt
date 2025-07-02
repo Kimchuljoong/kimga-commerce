@@ -9,6 +9,8 @@ import kr.co.kimga.order.infrastructure.service.order.dto.RequestCreateOrderDto
 import kr.co.kimga.order.infrastructure.service.order.dto.RequestFindOrdersDto
 import kr.co.kimga.order.infrastructure.service.payment.PaymentService
 import kr.co.kimga.order.infrastructure.service.payment.dto.RequestPayment
+import kr.co.kimga.order.infrastructure.service.payment.dto.RequestSavePaymentResult
+import kr.co.kimga.order.infrastructure.service.payment.enums.ActionType
 import kr.co.kimga.order.infrastructure.service.payment.enums.PaymentProvider
 import kr.co.kimga.order.infrastructure.service.payment.enums.PaymentType
 import lombok.RequiredArgsConstructor
@@ -30,6 +32,7 @@ class OrderFacade(
         requestCreateOrderDto.orderItems.forEach{
             stockService.decreaseInventory(it.productId, it.quantity)
         }
+
         val orderId = orderService.createOrder(requestCreateOrderDto)
 
         requestCreateOrderDto.orderPays.forEach {
@@ -39,7 +42,17 @@ class OrderFacade(
                 orderId = orderId,
                 amount = it.amount
             )
-            paymentService.makePayment(requestPayment)
+            val paymentResult = paymentService.makePayment(requestPayment)
+            val requestSavePaymentResult = RequestSavePaymentResult(
+                result = paymentResult.result,
+                actionType = ActionType.PAYMENT,
+                paymentType = requestPayment.paymentType,
+                transactionId = paymentResult.transactionId,
+                orderId = requestPayment.orderId,
+                amount = requestPayment.amount,
+                approvedAt = paymentResult.approvedAt
+            )
+            paymentService.savePaymentResult(requestSavePaymentResult)
         }
 
     }
