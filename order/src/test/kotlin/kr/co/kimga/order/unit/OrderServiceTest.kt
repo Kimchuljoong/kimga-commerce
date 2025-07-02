@@ -20,6 +20,7 @@ import kr.co.kimga.order.infrastructure.service.order.dto.RequestCreateOrderDto
 import kr.co.kimga.order.infrastructure.service.order.dto.RequestCreateOrderItemDto
 import kr.co.kimga.order.infrastructure.service.order.dto.RequestCreateOrderPayDto
 import kr.co.kimga.order.infrastructure.service.order.dto.RequestFindOrdersDto
+import kr.co.kimga.order.infrastructure.service.payment.enums.PaymentProvider
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertNotNull
@@ -60,6 +61,7 @@ class OrderServiceTest {
 
         val orderPays = listOf(
             RequestCreateOrderPayDto(
+                provider = PaymentProvider.TOSS.value,
                 payMethod =  PayMethod.CARD,
                 discountAmount = 0.0,
                 amount = amount,
@@ -85,9 +87,11 @@ class OrderServiceTest {
             orderItems = orderItems
         )
 
+        val fakeOrder = createTestOrder(id = 1L)
+
         every {
             orderJpaRepository.save(any())
-        } returns mockk<Order>()
+        } returns fakeOrder
 
         // when
         orderService.createOrder(requestCreateOrderDto)
