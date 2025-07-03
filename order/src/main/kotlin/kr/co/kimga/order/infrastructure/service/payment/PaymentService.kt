@@ -11,6 +11,8 @@ import org.springframework.retry.annotation.Retryable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
+import java.util.*
+import kotlin.jvm.optionals.toList
 
 @Service
 @RequiredArgsConstructor
@@ -60,5 +62,12 @@ class PaymentService(
             approvedAt = requestSavePaymentResult.approvedAt,
         )
         paymentRepository.save(newPayment)
+    }
+
+    fun findOrderTransactions(orderId: Long): List<OrderTransaction> {
+        val findPayments = paymentRepository.findById(orderId)
+        return findPayments.map {
+            OrderTransaction(it.orderId!!, it.transactionId!!, it.amount)
+        }.toList()
     }
 }

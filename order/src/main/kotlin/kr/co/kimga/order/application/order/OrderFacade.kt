@@ -59,7 +59,8 @@ class OrderFacade(
 
     @Transactional
     fun cancelOrder(orderId: Long) {
-        orderService.findOrderDetails(orderId).let {
+        orderService.findOrderDetails(orderId).let { it ->
+
             // todo 결제 취소
             orderService.cancelOrder(it.orderId)
             it.items.forEach {
