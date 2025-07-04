@@ -3,6 +3,7 @@ package kr.co.kimga.order.domain.entity.payment
 import jakarta.persistence.*
 import kr.co.kimga.order.domain.entity.payment.enums.PaymentStatus
 import kr.co.kimga.order.infrastructure.service.payment.enums.ActionType
+import kr.co.kimga.order.infrastructure.service.payment.enums.PaymentProvider
 import kr.co.kimga.order.infrastructure.service.payment.enums.PaymentType
 import java.time.Instant
 
@@ -18,6 +19,9 @@ class Payment(
 
     @Column(nullable = false)
     val actionType: ActionType? = null,
+
+    @Column(nullable = false)
+    val provider: PaymentProvider? = null,
 
     val paymentType: PaymentType? = null,
 

@@ -7,5 +7,5 @@ data class RequestCancelPayment(
     val provider: PaymentProvider,
     val paymentType : PaymentType,
     val orderId: Long,
-    val amount: Long,
+    val amount: Double,
 )

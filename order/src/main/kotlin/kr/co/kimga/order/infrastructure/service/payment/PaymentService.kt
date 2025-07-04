@@ -1,7 +1,9 @@
 package kr.co.kimga.order.infrastructure.service.payment
 
+import kr.co.kimga.order.domain.entity.order.OrderItem
 import kr.co.kimga.order.domain.entity.payment.Payment
 import kr.co.kimga.order.infrastructure.repository.PaymentJpaRepository
+import kr.co.kimga.order.infrastructure.service.order.dto.FindOrderItemDto
 import kr.co.kimga.order.infrastructure.service.payment.dto.*
 import kr.co.kimga.order.infrastructure.service.payment.enums.PaymentProvider
 import kr.co.kimga.order.infrastructure.service.payment.pg.PaymentProcessor
@@ -55,6 +57,7 @@ class PaymentService(
         val newPayment = Payment(
             orderId = requestSavePaymentResult.orderId,
             actionType = requestSavePaymentResult.actionType,
+            provider = requestSavePaymentResult.provider,
             paymentType = requestSavePaymentResult.paymentType,
             amount = requestSavePaymentResult.amount,
             status = requestSavePaymentResult.paymentStatus,
@@ -65,9 +68,15 @@ class PaymentService(
     }
 
     fun findOrderTransactions(orderId: Long): List<OrderTransaction> {
-        val findPayments = paymentRepository.findById(orderId)
+        val findPayments = paymentRepository.findByOrderId(orderId)
         return findPayments.map {
-            OrderTransaction(it.orderId!!, it.transactionId!!, it.amount)
+            OrderTransaction(
+                orderId = it.orderId!!,
+                transactionId =  it.transactionId!!,
+                provider = it.provider!!,
+                paymentType = it.paymentType!!,
+                amount = it.amount)
         }.toList()
     }
+
 }

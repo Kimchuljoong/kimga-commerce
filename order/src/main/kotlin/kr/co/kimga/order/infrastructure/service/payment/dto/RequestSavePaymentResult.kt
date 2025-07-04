@@ -2,12 +2,14 @@ package kr.co.kimga.order.infrastructure.service.payment.dto
 
 import kr.co.kimga.order.domain.entity.payment.enums.PaymentStatus
 import kr.co.kimga.order.infrastructure.service.payment.enums.ActionType
+import kr.co.kimga.order.infrastructure.service.payment.enums.PaymentProvider
 import kr.co.kimga.order.infrastructure.service.payment.enums.PaymentType
 import java.time.Instant
 
 data class RequestSavePaymentResult(
     val result: String,
     val actionType: ActionType,
+    val provider: PaymentProvider,
     val paymentType: PaymentType,
     val transactionId: String,
     val orderId: Long? = null,

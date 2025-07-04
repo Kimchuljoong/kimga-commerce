@@ -1,6 +1,5 @@
 package kr.co.kimga.order.application.order
 
-import kr.co.kimga.order.common.annotation.DistributedLock
 import kr.co.kimga.order.infrastructure.service.order.OrderService
 import kr.co.kimga.order.infrastructure.service.stock.StockService
 import kr.co.kimga.order.infrastructure.service.order.dto.FindOrderDetailsDto
@@ -8,6 +7,7 @@ import kr.co.kimga.order.infrastructure.service.order.dto.FindOrderDto
 import kr.co.kimga.order.infrastructure.service.order.dto.RequestCreateOrderDto
 import kr.co.kimga.order.infrastructure.service.order.dto.RequestFindOrdersDto
 import kr.co.kimga.order.infrastructure.service.payment.PaymentService
+import kr.co.kimga.order.infrastructure.service.payment.dto.RequestCancelPayment
 import kr.co.kimga.order.infrastructure.service.payment.dto.RequestPayment
 import kr.co.kimga.order.infrastructure.service.payment.dto.RequestSavePaymentResult
 import kr.co.kimga.order.infrastructure.service.payment.enums.ActionType
@@ -46,6 +46,7 @@ class OrderFacade(
             val requestSavePaymentResult = RequestSavePaymentResult(
                 result = paymentResult.result,
                 actionType = ActionType.PAYMENT,
+                provider = PaymentProvider.valueOf(it.provider),
                 paymentType = requestPayment.paymentType,
                 transactionId = paymentResult.transactionId,
                 orderId = requestPayment.orderId,
@@ -59,9 +60,18 @@ class OrderFacade(
 
     @Transactional
     fun cancelOrder(orderId: Long) {
-        orderService.findOrderDetails(orderId).let { it ->
 
-            // todo 결제 취소
+        paymentService.findOrderTransactions(orderId).forEach {
+            val requestCancelPayment = RequestCancelPayment(
+                orderId = it.orderId,
+                provider = it.provider,
+                paymentType = it.paymentType,
+                amount = it.amount
+            )
+            paymentService.cancelPayment(requestCancelPayment)
+        }
+
+        orderService.findOrderDetails(orderId).let { it ->
             orderService.cancelOrder(it.orderId)
             it.items.forEach {
                 stockService.restoreInventory(it.productId, it.quantity)
