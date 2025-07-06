@@ -28,7 +28,7 @@ class OrderFacade(
 ) {
 
     @Transactional
-    fun createOrder(requestCreateOrderDto: RequestCreateOrderDto) {
+    fun createOrder(requestCreateOrderDto: RequestCreateOrderDto): Long {
         requestCreateOrderDto.orderItems.forEach{
             stockService.decreaseInventory(it.productId, it.quantity)
         }
@@ -56,6 +56,7 @@ class OrderFacade(
             paymentService.savePaymentResult(requestSavePaymentResult)
         }
 
+        return orderId
     }
 
     @Transactional

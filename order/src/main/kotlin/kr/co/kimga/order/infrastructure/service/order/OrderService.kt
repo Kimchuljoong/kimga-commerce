@@ -56,6 +56,7 @@ class OrderService(
         }
     }
 
+    @Transactional(readOnly = true)
     fun findOrderDetails(orderId: Long): FindOrderDetailsDto {
 
         val findOrder = orderRepository.findById(orderId)
@@ -71,7 +72,7 @@ class OrderService(
                     productName = it.productName,
                     quantity = it.remainQuantity()
                 )
-            },
+            }.toList(),
             payedAmount = findOrder.orderPays.sumOf { it.amount },
             discountAmount = findOrder.orderPays.sumOf { it.discountAmount },
             totalAmount = findOrder.orderPays.sumOf { it.amount + it.discountAmount }

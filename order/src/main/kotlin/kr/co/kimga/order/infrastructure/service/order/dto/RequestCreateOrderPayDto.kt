@@ -9,5 +9,5 @@ data class RequestCreateOrderPayDto(
     val discountAmount: Double,
     val amount: Double,
     val vat: Double,
-    val status: PayStatus,
+    val status: PayStatus?,
 )

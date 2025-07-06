@@ -28,7 +28,6 @@ class OrderPay(
     val canceledDiscountAmount: Double = 0.0,
     var refundedAmount: Double = 0.0,
 
-    @Column(nullable = false)
     val status: PayStatus? = null,
 
     @CreatedDate

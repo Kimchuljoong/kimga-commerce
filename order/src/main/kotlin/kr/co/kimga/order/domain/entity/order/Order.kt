@@ -50,30 +50,38 @@ class Order(
                 throw CanNotCreateOrderException()
             }
 
-            val orderPays = requestCreateOrderDto.orderPays.map {
+            val order = Order(
+                memberId = requestCreateOrderDto.memberId,
+                orderDate = requestCreateOrderDto.orderDate,
+                orderPays = mutableListOf(),
+                orderItems = mutableListOf()
+            )
+
+            requestCreateOrderDto.orderPays.map {
                 OrderPay(
                     payMethod = it.payMethod,
                     discountAmount = it.discountAmount,
                     amount = it.amount,
                     status = it.status,
+                    order = order
                 )
-            }.toMutableList()
+            }.also {
+                order.orderPays.addAll(it)
+            }
 
-            val orderItems = requestCreateOrderDto.orderItems.map {
+            requestCreateOrderDto.orderItems.map {
                 OrderItem(
                     productId = it.productId,
                     productName = it.productName,
                     price = it.price,
                     quantity = it.quantity,
+                    order = order
                 )
-            }.toMutableList()
+            }.also {
+                order.orderItems.addAll(it)
+            }
 
-            return Order(
-                memberId = requestCreateOrderDto.memberId,
-                orderDate = requestCreateOrderDto.orderDate,
-                orderPays = orderPays,
-                orderItems = orderItems
-            )
+            return order
         }
     }
 
