@@ -1,5 +1,6 @@
 package kr.co.kimga.order.application.order
 
+import kr.co.kimga.order.domain.entity.order.enums.PayMethod
 import kr.co.kimga.order.infrastructure.service.order.OrderService
 import kr.co.kimga.order.infrastructure.service.stock.StockService
 import kr.co.kimga.order.infrastructure.service.order.dto.FindOrderDetailsDto
@@ -54,6 +55,7 @@ class OrderFacade(
                 approvedAt = paymentResult.approvedAt
             )
             paymentService.savePaymentResult(requestSavePaymentResult)
+            orderService.updateOrderPaySucceed(orderId, it.payMethod)
         }
 
         return orderId
@@ -69,7 +71,19 @@ class OrderFacade(
                 paymentType = it.paymentType,
                 amount = it.amount
             )
-            paymentService.cancelPayment(requestCancelPayment)
+            val paymentResult = paymentService.cancelPayment(requestCancelPayment)
+            val requestSavePaymentResult = RequestSavePaymentResult(
+                result = paymentResult.result,
+                actionType = ActionType.PAYMENT,
+                provider = it.provider,
+                paymentType = it.paymentType,
+                transactionId = paymentResult.transactionId,
+                orderId = it.orderId,
+                amount = it.amount,
+                approvedAt = paymentResult.approvedAt
+            )
+            paymentService.savePaymentResult(requestSavePaymentResult)
+            orderService.updateOrderPayRefund(orderId, PayMethod.valueOf(it.paymentType.value))
         }
 
         orderService.findOrderDetails(orderId).let { it ->

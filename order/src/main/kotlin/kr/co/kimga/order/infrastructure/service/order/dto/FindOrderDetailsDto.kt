@@ -8,6 +8,7 @@ data class FindOrderDetailsDto(
     val orderStatus: OrderStatus,
     val orderDate: Instant,
     val items: List<FindOrderItemDto>,
+    val pays: List<FindOrderPaymentDto>,
     val payedAmount: Double,
     val discountAmount: Double,
     val totalAmount: Double,

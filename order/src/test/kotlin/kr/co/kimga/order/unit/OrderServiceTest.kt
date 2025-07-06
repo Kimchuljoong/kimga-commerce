@@ -4,7 +4,6 @@ import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
-import io.mockk.mockk
 import io.mockk.verify
 import kr.co.kimga.order.domain.entity.order.Order
 import kr.co.kimga.order.domain.entity.order.OrderItem

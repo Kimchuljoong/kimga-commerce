@@ -38,13 +38,13 @@ class Stock(
     }
 
     fun decreaseInventory(quantity: Long) {
-        if (getAvailableInventory() - quantity <= 0)
+        if (getAvailableInventory() - quantity < 0)
             throw CanNotAvailableInventory()
         orderedInventory += quantity
     }
 
     fun restoreInventory(quantity: Long) {
-        if (orderedInventory - quantity <= 0)
+        if (orderedInventory - quantity < 0)
             throw CanNotRestoreStock()
         orderedInventory -= quantity
     }

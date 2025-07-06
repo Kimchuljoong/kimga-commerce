@@ -28,7 +28,7 @@ class OrderPay(
     val canceledDiscountAmount: Double = 0.0,
     var refundedAmount: Double = 0.0,
 
-    val status: PayStatus? = null,
+    var status: PayStatus? = null,
 
     @CreatedDate
     val createdAt: Instant = Instant.now(),
@@ -55,5 +55,13 @@ class OrderPay(
 
     fun remainAmount(): Double {
         return amount - refundedAmount
+    }
+
+    fun paymentStatusSucceed() {
+        status = PayStatus.SUCCEED
+    }
+
+    fun paymentStatusRefund() {
+        status = PayStatus.REFUNDED
     }
 }

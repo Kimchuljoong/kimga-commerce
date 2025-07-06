@@ -1,9 +1,7 @@
 package kr.co.kimga.order.infrastructure.service.payment
 
-import kr.co.kimga.order.domain.entity.order.OrderItem
 import kr.co.kimga.order.domain.entity.payment.Payment
 import kr.co.kimga.order.infrastructure.repository.PaymentJpaRepository
-import kr.co.kimga.order.infrastructure.service.order.dto.FindOrderItemDto
 import kr.co.kimga.order.infrastructure.service.payment.dto.*
 import kr.co.kimga.order.infrastructure.service.payment.enums.PaymentProvider
 import kr.co.kimga.order.infrastructure.service.payment.pg.PaymentProcessor
@@ -13,8 +11,6 @@ import org.springframework.retry.annotation.Retryable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
-import java.util.*
-import kotlin.jvm.optionals.toList
 
 @Service
 @RequiredArgsConstructor
