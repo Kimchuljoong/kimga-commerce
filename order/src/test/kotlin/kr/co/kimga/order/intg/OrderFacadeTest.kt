@@ -2,17 +2,14 @@ package kr.co.kimga.order.intg
 
 import kr.co.kimga.order.application.order.OrderFacade
 import kr.co.kimga.order.domain.entity.order.enums.PayMethod
-import kr.co.kimga.order.infrastructure.service.order.OrderService
+import kr.co.kimga.order.domain.exception.stock.CanNotAvailableInventory
+import kr.co.kimga.order.infrastructure.exception.stock.CanNotFindStock
 import kr.co.kimga.order.infrastructure.service.order.dto.RequestCreateOrderDto
 import kr.co.kimga.order.infrastructure.service.order.dto.RequestCreateOrderItemDto
 import kr.co.kimga.order.infrastructure.service.order.dto.RequestCreateOrderPayDto
 import kr.co.kimga.order.infrastructure.service.stock.StockService
 import kr.co.kimga.order.infrastructure.service.stock.dto.RequestCreateStockDto
-import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.DisplayName
-import org.junit.jupiter.api.TestInstance
-import org.junit.jupiter.api.assertNotNull
+import org.junit.jupiter.api.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.context.annotation.Import
@@ -34,11 +31,18 @@ class OrderFacadeTest {
 
     @BeforeAll
     fun initOnce() {
-        val requestCreateStockDto = RequestCreateStockDto(
-            productId = 1L,
+        stockService.createStock(
+            RequestCreateStockDto(
+                productId = 1L,
+            )
         )
-        stockService.createStock(requestCreateStockDto)
         stockService.applyInventory(productId = 1L, 10)
+
+        stockService.createStock(
+            RequestCreateStockDto(
+                productId = 3L,
+            )
+        )
     }
 
     @Test
@@ -96,7 +100,106 @@ class OrderFacadeTest {
 
     }
 
+    @Test
+    @DisplayName("재고가 없는 상품은 주문할 수 없다")
+    fun `can not order when product stock not exist`() {
+
+        // given
+        val productId = 2L
+        val productName = "테스트 상품"
+        val price = 10000.0
+        val vat = getVat(price)
+        val quantity = 3L
+
+        val orderItems = listOf(
+            RequestCreateOrderItemDto(
+                productId = productId,
+                productName = productName,
+                price = price,
+                vat = vat,
+                quantity = quantity
+            ),
+        )
+
+        val memberId  = 1L
+        val provider = "TOSS"
+        val payMethod = PayMethod.CARD
+        val amount = orderItems.sumOf { it.price }
+
+        val orderPays = listOf(
+            RequestCreateOrderPayDto(
+                provider = provider,
+                payMethod = payMethod,
+                discountAmount = 0.0,
+                amount = amount,
+                vat = getVat(amount),
+                status = null,
+            )
+        )
+
+        val requestCreateOrderDto = RequestCreateOrderDto(
+            memberId = memberId,
+            orderDate = Instant.now(),
+            orderPays = orderPays,
+            orderItems = orderItems,
+        )
+
+        // when
+        // then
+        assertThrows<CanNotFindStock> { orderFacade.createOrder(requestCreateOrderDto) }
+    }
+
+    @Test
+    @DisplayName("재고가 0인 상품은 주문할 수 없다")
+    fun `can not order when product stock is empty`() {
+
+        // given
+        val productId = 3L
+        val productName = "테스트 상품"
+        val price = 10000.0
+        val vat = getVat(price)
+        val quantity = 3L
+
+        val orderItems = listOf(
+            RequestCreateOrderItemDto(
+                productId = productId,
+                productName = productName,
+                price = price,
+                vat = vat,
+                quantity = quantity
+            ),
+        )
+
+        val memberId  = 1L
+        val provider = "TOSS"
+        val payMethod = PayMethod.CARD
+        val amount = orderItems.sumOf { it.price }
+
+        val orderPays = listOf(
+            RequestCreateOrderPayDto(
+                provider = provider,
+                payMethod = payMethod,
+                discountAmount = 0.0,
+                amount = amount,
+                vat = getVat(amount),
+                status = null,
+            )
+        )
+
+        val requestCreateOrderDto = RequestCreateOrderDto(
+            memberId = memberId,
+            orderDate = Instant.now(),
+            orderPays = orderPays,
+            orderItems = orderItems,
+        )
+
+        // when
+        // then
+        assertThrows<CanNotAvailableInventory> { orderFacade.createOrder(requestCreateOrderDto) }
+    }
+
     fun getVat(price: Double): Double {
         return floor(price / 1.1 / 10)
     }
+
 }
