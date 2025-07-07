@@ -7,4 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository
 interface OrderPayJpaRepository: JpaRepository<OrderPay, Long> {
 
     fun findByOrderIdAndPayMethod(orderId: Long, payMethod: PayMethod): OrderPay?
+    fun findByOrderId(orderId: Long): List<OrderPay>
 }

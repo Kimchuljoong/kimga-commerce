@@ -243,7 +243,6 @@ class OrderServiceTest {
         val findOrderDetails = orderService.findOrderDetails(orderId)
 
         // then
-        print(findOrderDetails)
         assertNotNull(findOrderDetails)
         assertEquals(orderId, findOrderDetails.orderId)
         assertEquals(orderItems.size, findOrderDetails.items.size)

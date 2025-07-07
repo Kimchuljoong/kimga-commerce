@@ -32,11 +32,6 @@ class Stock(
         return totalInventory - orderedInventory
     }
 
-    fun availableInventory() {
-        if (getAvailableInventory() <= 0)
-            throw CanNotAvailableInventory()
-    }
-
     fun decreaseInventory(quantity: Long) {
         if (getAvailableInventory() - quantity < 0)
             throw CanNotAvailableInventory()

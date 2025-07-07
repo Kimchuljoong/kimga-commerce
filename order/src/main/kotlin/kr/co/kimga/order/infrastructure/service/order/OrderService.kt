@@ -2,6 +2,8 @@ package kr.co.kimga.order.infrastructure.service.order
 
 import kr.co.kimga.order.domain.entity.order.Order
 import kr.co.kimga.order.domain.entity.order.enums.PayMethod
+import kr.co.kimga.order.domain.entity.order.enums.PayStatus
+import kr.co.kimga.order.infrastructure.exception.order.CanNotCancelOrderException
 import kr.co.kimga.order.infrastructure.exception.order.CanNotFindOrder
 import kr.co.kimga.order.infrastructure.exception.order.CanNotFoundOrderPayException
 import kr.co.kimga.order.infrastructure.repository.OrderJpaRepository
@@ -103,5 +105,35 @@ class OrderService(
             discountAmount = findOrder.orderPays.sumOf { it.discountAmount },
             totalAmount = findOrder.orderPays.sumOf { it.amount + it.discountAmount }
         )
+    }
+
+    @Transactional
+    fun completeDelivery(orderId: Long) {
+        val findById = orderRepository.findById(orderId)
+            .orElseThrow { throw CanNotFindOrder() }
+        findById.completeDelivery()
+    }
+
+    @Transactional
+    fun completePaymentForOrder(orderId: Long) {
+        val findOrder = orderRepository.findById(orderId)
+            .orElseThrow { throw CanNotFindOrder() }
+
+        if (findOrder.orderPays.isEmpty())
+            throw CanNotFoundOrderPayException()
+        findOrder.orderPays.forEach{
+            print(it.status)
+        }
+        if (findOrder.orderPays.all { it.status == PayStatus.SUCCEED }) {
+            findOrder.completePaid()
+        }
+    }
+
+    fun cancelAble(orderId: Long) {
+        val findOrder = orderRepository.findById(orderId)
+            .orElseThrow { throw CanNotFindOrder() }
+        val cancelAble = findOrder.cancelAble()
+        if (!cancelAble)
+            throw CanNotCancelOrderException()
     }
 }

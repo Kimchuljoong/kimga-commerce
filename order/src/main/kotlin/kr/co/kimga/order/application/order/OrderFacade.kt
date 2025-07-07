@@ -12,6 +12,7 @@ import kr.co.kimga.order.infrastructure.service.payment.dto.RequestCancelPayment
 import kr.co.kimga.order.infrastructure.service.payment.dto.RequestPayment
 import kr.co.kimga.order.infrastructure.service.payment.dto.RequestSavePaymentResult
 import kr.co.kimga.order.infrastructure.service.payment.enums.ActionType
+import kr.co.kimga.order.infrastructure.service.payment.enums.PaymentProcessResult
 import kr.co.kimga.order.infrastructure.service.payment.enums.PaymentProvider
 import kr.co.kimga.order.infrastructure.service.payment.enums.PaymentType
 import lombok.RequiredArgsConstructor
@@ -55,14 +56,23 @@ class OrderFacade(
                 approvedAt = paymentResult.approvedAt
             )
             paymentService.savePaymentResult(requestSavePaymentResult)
-            orderService.updateOrderPaySucceed(orderId, it.payMethod)
+            val mappedResult = paymentResult.mappedResult
+
+            when(mappedResult) {
+                PaymentProcessResult.PAID -> orderService.updateOrderPaySucceed(orderId, it.payMethod)
+                else -> {}
+            }
         }
+
+        orderService.completePaymentForOrder(orderId)
 
         return orderId
     }
 
     @Transactional
     fun cancelOrder(orderId: Long) {
+
+        orderService.cancelAble(orderId)
 
         paymentService.findOrderTransactions(orderId).forEach {
             val requestCancelPayment = RequestCancelPayment(
@@ -92,6 +102,9 @@ class OrderFacade(
                 stockService.restoreInventory(it.productId, it.quantity)
             }
         }
+
+
+
     }
 
     fun findOrders(
@@ -103,5 +116,9 @@ class OrderFacade(
 
     fun findOrderDetails(orderId: Long): FindOrderDetailsDto {
         return  orderService.findOrderDetails(orderId)
+    }
+
+    fun completeDelivery(orderId: Long) {
+        orderService.completeDelivery(orderId)
     }
 }

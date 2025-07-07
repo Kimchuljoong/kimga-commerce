@@ -6,6 +6,7 @@ import kr.co.kimga.order.infrastructure.service.payment.dto.CancelPaymentResult
 import kr.co.kimga.order.infrastructure.service.payment.dto.PaymentResult
 import kr.co.kimga.order.infrastructure.service.payment.dto.RequestCancelPayment
 import kr.co.kimga.order.infrastructure.service.payment.dto.RequestPayment
+import kr.co.kimga.order.infrastructure.service.payment.enums.PaymentProcessResult
 import kr.co.kimga.order.infrastructure.service.payment.pg.PaymentProcessor
 import kr.co.kimga.order.infrastructure.service.payment.pg.TossPaymentProcessor
 import org.mockito.Mockito.mock
@@ -28,15 +29,17 @@ class MockPaymentProcessorConfig {
         } returns PaymentResult(
             result = "200",
             transactionId = "11234",
-            approvedAt = Instant.now()
+            approvedAt = Instant.now(),
+            mappedResult = PaymentProcessResult.PAID
         )
 
         every {
             mock.cancelProcess(any<RequestCancelPayment>())
         } returns CancelPaymentResult(
-            result = "200",
+            result = "201",
             transactionId = "11235",
-            approvedAt = Instant.now()
+            approvedAt = Instant.now(),
+            mappedResult = PaymentProcessResult.REFUNDED
         )
 
         return mock

@@ -3,6 +3,7 @@ package kr.co.kimga.order.domain.entity.order
 import jakarta.persistence.*
 import kr.co.kimga.order.domain.entity.order.enums.OrderStatus
 import kr.co.kimga.order.domain.exception.order.CanNotChangeOrderStatus
+import kr.co.kimga.order.domain.exception.order.CanNotCompleteDeliveryException
 import kr.co.kimga.order.infrastructure.exception.order.CanNotCreateOrderException
 import kr.co.kimga.order.infrastructure.service.order.dto.RequestCreateOrderDto
 import org.springframework.data.annotation.CreatedDate
@@ -85,10 +86,26 @@ class Order(
         }
     }
 
+    fun cancelAble(): Boolean {
+        return status in listOf(OrderStatus.ORDERED, OrderStatus.PAID)
+    }
+
     fun cancel() {
-        if (status !in listOf(OrderStatus.ORDERED, OrderStatus.PAID))
+        if (!cancelAble())
             throw CanNotChangeOrderStatus()
 
         status = OrderStatus.CANCELLED
+    }
+
+    fun completePaid() {
+        if (status !in listOf(OrderStatus.ORDERED))
+            throw CanNotChangeOrderStatus()
+        status = OrderStatus.PAID
+    }
+
+    fun completeDelivery() {
+        if (status !in listOf(OrderStatus.PAID))
+            throw CanNotChangeOrderStatus()
+        status = OrderStatus.DELIVERED
     }
 }

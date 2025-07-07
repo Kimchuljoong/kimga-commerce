@@ -6,6 +6,7 @@ import kr.co.kimga.order.domain.entity.order.enums.PayMethod
 import kr.co.kimga.order.domain.entity.order.enums.PayStatus
 import kr.co.kimga.order.domain.entity.stock.Stock
 import kr.co.kimga.order.domain.exception.stock.CanNotAvailableInventory
+import kr.co.kimga.order.infrastructure.exception.order.CanNotCancelOrderException
 import kr.co.kimga.order.infrastructure.exception.stock.CanNotFindStock
 import kr.co.kimga.order.infrastructure.repository.OrderJpaRepository
 import kr.co.kimga.order.infrastructure.repository.StockJpaRepository
@@ -38,7 +39,7 @@ class OrderFacadeTest {
             Stock(
                 productId = 1L,
                 orderedInventory = 3L,
-                totalInventory = 10L,
+                totalInventory = 20L,
             )
         )
 
@@ -211,6 +212,23 @@ class OrderFacadeTest {
     }
 
     @Test
+    @DisplayName("주문을 배송완료 처리할 수 있다")
+    fun `can not cancel order when product already delivered`() {
+
+        // given
+        val requestCreateOrderDto = makeRequestCreateOrderDto(productId = 1L)
+        val orderId = orderFacade.createOrder(requestCreateOrderDto)
+
+        // when
+        orderFacade.completeDelivery(orderId)
+        val findOrderDetails = orderFacade.findOrderDetails(orderId)
+
+        // then
+        assertEquals(OrderStatus.DELIVERED, findOrderDetails.orderStatus)
+
+    }
+
+    @Test
     @DisplayName("주문을 취소할 수 있다")
     fun `can cancel order`() {
         // given
@@ -229,5 +247,17 @@ class OrderFacadeTest {
         }
     }
 
+    @Test
+    @DisplayName("배송완료된 주문은 취소할 수 없다")
+    fun `can not cancel order when it delivered`() {
+        // given
+        val requestCreateOrderDto = makeRequestCreateOrderDto(productId = 1L)
+        val orderId = orderFacade.createOrder(requestCreateOrderDto)
+        orderFacade.completeDelivery(orderId)
+
+        // when
+        // then
+        assertThrows<CanNotCancelOrderException> { orderFacade.cancelOrder(orderId) }
+    }
 
 }
