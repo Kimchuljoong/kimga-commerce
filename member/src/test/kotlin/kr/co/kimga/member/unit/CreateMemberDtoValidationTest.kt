@@ -84,8 +84,6 @@ class CreateMemberDtoValidationTest {
         // when
         val violations = validator.validate(dto)
 
-        println(violations)
-
         // then
         assertEquals(2, violations.size)
         val violationMessages = violations.map { it.message }
@@ -102,8 +100,6 @@ class CreateMemberDtoValidationTest {
 
         // when
         val violations = validator.validate(dto)
-
-        println(violations)
 
         // then
         assertEquals(1, violations.size)

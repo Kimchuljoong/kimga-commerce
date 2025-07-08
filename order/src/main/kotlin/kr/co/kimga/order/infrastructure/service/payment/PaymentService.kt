@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 @RequiredArgsConstructor
 class PaymentService(
-    paymentProcessors: List<PaymentProcessor>,
+    private val paymentProcessors: List<PaymentProcessor>,
     private val paymentRepository: PaymentJpaRepository
 ) {
     private val processors: Map<PaymentProvider, PaymentProcessor> =

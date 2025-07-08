@@ -8,7 +8,6 @@ import kr.co.kimga.order.domain.entity.stock.Stock
 import kr.co.kimga.order.domain.exception.stock.CanNotAvailableInventory
 import kr.co.kimga.order.infrastructure.exception.order.CanNotCancelOrderException
 import kr.co.kimga.order.infrastructure.exception.stock.CanNotFindStock
-import kr.co.kimga.order.infrastructure.repository.OrderJpaRepository
 import kr.co.kimga.order.infrastructure.repository.StockJpaRepository
 import kr.co.kimga.order.infrastructure.service.order.dto.RequestCreateOrderDto
 import kr.co.kimga.order.infrastructure.service.order.dto.RequestCreateOrderItemDto
@@ -55,44 +54,7 @@ class OrderFacadeTest {
     fun `can order`() {
 
         // given
-        val productId = 1L
-        val productName = "테스트 상품"
-        val price = 10000.0
-        val vat = getVat(price)
-        val quantity = 3L
-
-        val orderItems = listOf(
-            RequestCreateOrderItemDto(
-                productId = productId,
-                productName = productName,
-                price = price,
-                vat = vat,
-                quantity = quantity
-            ),
-        )
-
-        val memberId  = 1L
-        val provider = "TOSS"
-        val payMethod = PayMethod.CARD
-        val amount = orderItems.sumOf { it.price }
-
-        val orderPays = listOf(
-            RequestCreateOrderPayDto(
-                provider = provider,
-                payMethod = payMethod,
-                discountAmount = 0.0,
-                amount = amount,
-                vat = getVat(amount),
-                status = null,
-            )
-        )
-
-        val requestCreateOrderDto = RequestCreateOrderDto(
-            memberId = memberId,
-            orderDate = Instant.now(),
-            orderPays = orderPays,
-            orderItems = orderItems,
-        )
+        val requestCreateOrderDto = makeRequestCreateOrderDto(productId = 1L, payMethod = PayMethod.CARD)
 
         // when
         val createdOrderId = orderFacade.createOrder(requestCreateOrderDto)
@@ -110,44 +72,7 @@ class OrderFacadeTest {
     fun `can not order when product stock not exist`() {
 
         // given
-        val productId = 2L
-        val productName = "테스트 상품"
-        val price = 10000.0
-        val vat = getVat(price)
-        val quantity = 3L
-
-        val orderItems = listOf(
-            RequestCreateOrderItemDto(
-                productId = productId,
-                productName = productName,
-                price = price,
-                vat = vat,
-                quantity = quantity
-            ),
-        )
-
-        val memberId  = 1L
-        val provider = "TOSS"
-        val payMethod = PayMethod.CARD
-        val amount = orderItems.sumOf { it.price }
-
-        val orderPays = listOf(
-            RequestCreateOrderPayDto(
-                provider = provider,
-                payMethod = payMethod,
-                discountAmount = 0.0,
-                amount = amount,
-                vat = getVat(amount),
-                status = null,
-            )
-        )
-
-        val requestCreateOrderDto = RequestCreateOrderDto(
-            memberId = memberId,
-            orderDate = Instant.now(),
-            orderPays = orderPays,
-            orderItems = orderItems,
-        )
+        val requestCreateOrderDto = makeRequestCreateOrderDto(productId = 2L, payMethod = PayMethod.CARD)
 
         // when
         // then
@@ -159,14 +84,14 @@ class OrderFacadeTest {
     fun `can not order when product stock is empty`() {
 
         // given
-        val requestCreateOrderDto = makeRequestCreateOrderDto(productId = 3L)
+        val requestCreateOrderDto = makeRequestCreateOrderDto(productId = 3L, payMethod = PayMethod.CARD)
 
         // when
         // then
         assertThrows<CanNotAvailableInventory> { orderFacade.createOrder(requestCreateOrderDto) }
     }
 
-    private fun makeRequestCreateOrderDto(productId: Long): RequestCreateOrderDto {
+    private fun makeRequestCreateOrderDto(productId: Long, payMethod: PayMethod): RequestCreateOrderDto {
         val productName = "테스트 상품"
         val price = 10000.0
         val vat = getVat(price)
@@ -184,7 +109,6 @@ class OrderFacadeTest {
 
         val memberId = 1L
         val provider = "TOSS"
-        val payMethod = PayMethod.CARD
         val amount = orderItems.sumOf { it.price }
 
         val orderPays = listOf(
@@ -216,7 +140,7 @@ class OrderFacadeTest {
     fun `can not cancel order when product already delivered`() {
 
         // given
-        val requestCreateOrderDto = makeRequestCreateOrderDto(productId = 1L)
+        val requestCreateOrderDto = makeRequestCreateOrderDto(productId = 1L, payMethod = PayMethod.CARD)
         val orderId = orderFacade.createOrder(requestCreateOrderDto)
 
         // when
@@ -232,7 +156,7 @@ class OrderFacadeTest {
     @DisplayName("주문을 취소할 수 있다")
     fun `can cancel order`() {
         // given
-        val requestCreateOrderDto = makeRequestCreateOrderDto(productId = 1L)
+        val requestCreateOrderDto = makeRequestCreateOrderDto(productId = 1L, payMethod = PayMethod.CARD)
         val orderId = orderFacade.createOrder(requestCreateOrderDto)
 
         // when
@@ -251,13 +175,27 @@ class OrderFacadeTest {
     @DisplayName("배송완료된 주문은 취소할 수 없다")
     fun `can not cancel order when it delivered`() {
         // given
-        val requestCreateOrderDto = makeRequestCreateOrderDto(productId = 1L)
+        val requestCreateOrderDto = makeRequestCreateOrderDto(productId = 1L, payMethod = PayMethod.CARD)
         val orderId = orderFacade.createOrder(requestCreateOrderDto)
         orderFacade.completeDelivery(orderId)
 
         // when
         // then
         assertThrows<CanNotCancelOrderException> { orderFacade.cancelOrder(orderId) }
+    }
+
+    @Test
+    @DisplayName("현금으로 주문하면 ORDERED 상태가 된다")
+    fun `can create order with cash`() {
+        // given
+        val requestCreateOrderDto = makeRequestCreateOrderDto(productId = 1L, payMethod = PayMethod.CASH)
+
+        // when
+        val orderId = orderFacade.createOrder(requestCreateOrderDto)
+        val findOrderDetails = orderFacade.findOrderDetails(orderId)
+
+        // then
+        assertEquals(OrderStatus.ORDERED, findOrderDetails.orderStatus)
     }
 
 }

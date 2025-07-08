@@ -97,7 +97,7 @@ class OrderService(
                 FindOrderPaymentDto(
                     id = it.id!!,
                     paymentMethod = it.payMethod!!,
-                    paymentStatus = it.status!!,
+                    paymentStatus = it.status,
                     amount = it.amount,
                 )
             }.toList(),
@@ -121,9 +121,6 @@ class OrderService(
 
         if (findOrder.orderPays.isEmpty())
             throw CanNotFoundOrderPayException()
-        findOrder.orderPays.forEach{
-            print(it.status)
-        }
         if (findOrder.orderPays.all { it.status == PayStatus.SUCCEED }) {
             findOrder.completePaid()
         }

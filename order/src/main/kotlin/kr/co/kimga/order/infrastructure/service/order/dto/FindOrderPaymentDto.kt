@@ -6,6 +6,6 @@ import kr.co.kimga.order.domain.entity.order.enums.PayStatus
 data class FindOrderPaymentDto(
     val id: Long,
     val paymentMethod: PayMethod,
-    val paymentStatus: PayStatus,
+    val paymentStatus: PayStatus?,
     val amount: Double,
 )
