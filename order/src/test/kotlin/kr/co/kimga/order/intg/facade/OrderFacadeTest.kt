@@ -1,4 +1,4 @@
-package kr.co.kimga.order.intg
+package kr.co.kimga.order.intg.facade
 
 import kr.co.kimga.order.application.order.OrderFacade
 import kr.co.kimga.order.domain.entity.order.enums.OrderStatus

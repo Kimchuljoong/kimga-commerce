@@ -1,18 +1,6 @@
-package kr.co.kimga.order.intg
+package kr.co.kimga.order.intg.facade
 
-import io.mockk.every
-import io.mockk.mockk
-import kr.co.kimga.order.infrastructure.service.payment.dto.CancelPaymentResult
-import kr.co.kimga.order.infrastructure.service.payment.dto.PaymentResult
-import kr.co.kimga.order.infrastructure.service.payment.dto.RequestCancelPayment
-import kr.co.kimga.order.infrastructure.service.payment.dto.RequestPayment
-import kr.co.kimga.order.infrastructure.service.payment.enums.PaymentProcessResult
-import kr.co.kimga.order.infrastructure.service.payment.pg.PaymentProcessor
-import kr.co.kimga.order.infrastructure.service.payment.pg.TossPaymentProcessor
-import org.mockito.Mockito.mock
 import org.springframework.boot.test.context.TestConfiguration
-import org.springframework.context.annotation.Bean
-import java.time.Instant
 
 @TestConfiguration
 class MockPaymentProcessorConfig {
