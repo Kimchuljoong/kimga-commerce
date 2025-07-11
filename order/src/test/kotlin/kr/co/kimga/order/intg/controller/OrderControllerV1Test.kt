@@ -3,6 +3,7 @@ package kr.co.kimga.order.intg.controller
 import com.fasterxml.jackson.databind.ObjectMapper
 import kr.co.kimga.order.domain.entity.order.enums.PayMethod
 import kr.co.kimga.order.domain.entity.stock.Stock
+import kr.co.kimga.order.infrastructure.repository.StockJpaRepository
 import kr.co.kimga.order.infrastructure.service.order.dto.RequestCreateOrderDto
 import kr.co.kimga.order.infrastructure.service.order.dto.RequestCreateOrderItemDto
 import kr.co.kimga.order.infrastructure.service.order.dto.RequestCreateOrderPayDto
@@ -28,10 +29,24 @@ class OrderControllerV1Test {
     @Autowired
     private lateinit var objectMapper: ObjectMapper
 
+    @Autowired
+    private lateinit var stockJpaRepository: StockJpaRepository
 
     @BeforeAll
     fun initOnce() {
+        stockJpaRepository.save(
+            Stock(
+                productId = 1L,
+                orderedInventory = 3L,
+                totalInventory = 20L,
+            )
+        )
 
+        stockJpaRepository.save(
+            Stock(
+                productId = 3L,
+            )
+        )
     }
 
     @Test
