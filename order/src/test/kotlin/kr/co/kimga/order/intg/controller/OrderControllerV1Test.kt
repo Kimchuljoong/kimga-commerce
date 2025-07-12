@@ -1,6 +1,7 @@
 package kr.co.kimga.order.intg.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import kr.co.kimga.order.domain.entity.order.enums.OrderStatus
 import kr.co.kimga.order.domain.entity.order.enums.PayMethod
 import kr.co.kimga.order.domain.entity.stock.Stock
 import kr.co.kimga.order.infrastructure.repository.StockJpaRepository
@@ -14,6 +15,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
 import java.time.Instant
 import kotlin.math.floor
@@ -53,8 +55,11 @@ class OrderControllerV1Test {
     @DisplayName("주문을 할 수 있다")
     fun `can order`() {
 
+        // given
         val requestCreateOrderDto = makeRequestCreateOrderDto(productId = 1L, payMethod = PayMethod.CARD)
 
+        // when
+        // then
         mockMvc.post("/api/v1/orders") {
             contentType = MediaType.APPLICATION_JSON
             content = objectMapper.writeValueAsString(requestCreateOrderDto)
@@ -64,6 +69,42 @@ class OrderControllerV1Test {
                 string(Matchers.matchesRegex("\\d+"))
             }
         }
+    }
+
+    @Test
+    @DisplayName("주문을 취소할 수 있다")
+    fun `can cancel order`() {
+        // given
+        val requestCreateOrderDto = makeRequestCreateOrderDto(productId = 1L, payMethod = PayMethod.CARD)
+
+        val result = mockMvc.post("/api/v1/orders") {
+            contentType = MediaType.APPLICATION_JSON
+            content = objectMapper.writeValueAsString(requestCreateOrderDto)
+        }.andExpect {
+            status { isCreated() }
+            content {
+                string(Matchers.matchesRegex("\\d+"))
+            }
+        }.andReturn()
+
+        val orderId = result.response.contentAsString
+
+        // when
+        mockMvc.post("/api/v1/orders/$orderId/cancel") {
+            contentType = MediaType.APPLICATION_JSON
+            content = objectMapper.writeValueAsString(requestCreateOrderDto)
+        }.andExpect {
+            status { isOk() }
+        }
+
+        // then
+        mockMvc.get("/api/v1/orders/$orderId")
+            .andExpect {
+                status { isOk() }
+                jsonPath("$.orderId") { value(orderId) }
+                jsonPath("$.orderStatus") { value(OrderStatus.CANCELLED.name) }
+            }
+
     }
 
     private fun makeRequestCreateOrderDto(productId: Long, payMethod: PayMethod): RequestCreateOrderDto {
