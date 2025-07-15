@@ -13,6 +13,7 @@ import kr.co.kimga.order.domain.entity.order.enums.PayMethod
 import kr.co.kimga.order.domain.entity.order.enums.PayStatus
 import kr.co.kimga.order.domain.exception.order.CanNotChangeOrderStatus
 import kr.co.kimga.order.infrastructure.repository.OrderJpaRepository
+import kr.co.kimga.order.infrastructure.repository.OrderPayJpaRepository
 import kr.co.kimga.order.infrastructure.repository.OrderQuerydslRepository
 import kr.co.kimga.order.infrastructure.service.order.OrderService
 import kr.co.kimga.order.infrastructure.service.order.dto.RequestCreateOrderDto
@@ -42,6 +43,9 @@ class OrderServiceTest {
 
     @MockK
     private lateinit var orderQuerydslRepository: OrderQuerydslRepository
+
+    @MockK
+    private lateinit var orderPayRepository: OrderPayJpaRepository
 
     @InjectMockKs
     private lateinit var orderService: OrderService
@@ -223,7 +227,6 @@ class OrderServiceTest {
         val orderId = 1L
         val orderPays = listOf(
             createTestOrderPay(),
-            createTestOrderPay(),
         )
         val orderItems = listOf(
             createTestOrderItem(),
@@ -271,11 +274,14 @@ class OrderServiceTest {
     }
 
     private fun createTestOrderPay(
+        id: Long? = 1L,
         amount: Double = 1000.0,
         discountAmount: Double = 0.0,
         status: PayStatus = PayStatus.SUCCEED
     ): OrderPay {
         return OrderPay(
+            id = id,
+            payMethod = PayMethod.CARD,
             amount = amount,
             discountAmount = discountAmount,
             status = status
