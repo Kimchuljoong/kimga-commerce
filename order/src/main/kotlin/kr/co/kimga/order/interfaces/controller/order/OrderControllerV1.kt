@@ -1,11 +1,11 @@
 package kr.co.kimga.order.interfaces.controller
 
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
-import io.swagger.v3.oas.annotations.tags.Tag
 import kr.co.kimga.order.application.order.OrderFacade
 import kr.co.kimga.order.domain.entity.order.enums.OrderStatus
 import kr.co.kimga.order.infrastructure.service.order.dto.FindOrderDetailsDto
@@ -13,7 +13,6 @@ import kr.co.kimga.order.infrastructure.service.order.dto.FindOrderDto
 import kr.co.kimga.order.infrastructure.service.order.dto.RequestCreateOrderDto
 import kr.co.kimga.order.infrastructure.service.order.dto.RequestFindOrdersDto
 import lombok.RequiredArgsConstructor
-import org.apache.kafka.shaded.com.google.protobuf.Api
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.http.HttpStatus
@@ -43,6 +42,10 @@ class OrderControllerV1(
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     fun createOrder(
+        @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "주문 생성 요청 DTO",
+            required = true
+        )
         @RequestBody request: RequestCreateOrderDto
     ): Long {
         return orderFacade.createOrder(request)
@@ -57,6 +60,12 @@ class OrderControllerV1(
     )
     @PostMapping("/{orderId}/cancel")
     fun cancelOrder(
+        @Parameter(
+            name = "orderId",
+            description = "취소할 주문의 ID",
+            required = true,
+            example = "1"
+        )
         @PathVariable("orderId") orderId: Long)
     {
         orderFacade.cancelOrder(orderId)
@@ -99,6 +108,12 @@ class OrderControllerV1(
     )
     @GetMapping("/{orderId}")
     fun findOrderDetails(
+        @Parameter(
+            name = "orderId",
+            description = "조회할 주문 ID",
+            required = true,
+            example = "1"
+        )
         @PathVariable("orderId") orderId: Long,
     ): FindOrderDetailsDto {
         return orderFacade.findOrderDetails(orderId)
@@ -113,12 +128,18 @@ class OrderControllerV1(
     )
     @PostMapping("/{orderId}/delivery/complete")
     fun completeDelivery(
+        @Parameter(
+            name = "orderId",
+            description = "배송 완료 처리할 주문 ID",
+            required = true,
+            example = "1"
+        )
         @PathVariable orderId: Long
     ) {
         orderFacade.completeDelivery(orderId)
     }
 
-    fun toInstant(str: String): Instant{
+    private fun toInstant(str: String): Instant{
         val formatter = DateTimeFormatter.ofPattern("yyyyMMdd")
         val localDateTime = LocalDateTime.parse(str, formatter)
         return localDateTime.atZone(ZoneId.of("Asia/Seoul")).toInstant()
