@@ -41,6 +41,7 @@ subprojects {
 		implementation("org.springframework.boot:spring-boot-starter-validation")
 		implementation("org.jetbrains.kotlin:kotlin-reflect")
 		implementation("org.springframework.kafka:spring-kafka")
+		implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0")
 		compileOnly("org.projectlombok:lombok")
 		annotationProcessor("org.projectlombok:lombok")
 		testImplementation("io.mockk:mockk:1.13.10")

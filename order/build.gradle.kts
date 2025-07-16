@@ -39,7 +39,6 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.redisson:redisson-spring-boot-starter:3.23.2")
     implementation("com.querydsl:querydsl-jpa:5.1.0:jakarta")
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 
