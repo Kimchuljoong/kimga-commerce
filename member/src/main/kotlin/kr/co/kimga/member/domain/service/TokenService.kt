@@ -34,7 +34,6 @@ class TokenService (
 
     fun canRefresh(refreshToken: String) : Boolean {
         val refreshValidationResult = refreshJwtProvider.validate(refreshToken)
-        println(refreshValidationResult)
         return when {
             refreshValidationResult == JwtValidationResult.VALID -> true
             else -> false

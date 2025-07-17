@@ -16,7 +16,6 @@ class UtilsTest {
 
         // when
         // then
-        println (generatedUuid)
         assertNotNull(generatedUuid)
         assertNotEquals(generatedUuid, "")
     }
