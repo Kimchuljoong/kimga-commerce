@@ -1,5 +1,6 @@
 package kr.co.kimga.member.interfaces.controller
 
+import io.swagger.v3.oas.annotations.tags.Tag
 import kr.co.kimga.member.application.account.AccountFacade
 import kr.co.kimga.member.domain.dto.CreateAccountDto
 import kr.co.kimga.member.domain.dto.IncreaseAccountDto
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/account")
+@Tag(name = "구좌 API V1(미사용)")
 class AccountControllerV1(
     private val accountFacade: AccountFacade
 ) {
