@@ -1,5 +1,6 @@
 package kr.co.kimga.order.infrastructure.service.stock
 
+import kr.co.kimga.order.common.annotation.DistributedLock
 import kr.co.kimga.order.domain.entity.stock.Stock
 import kr.co.kimga.order.infrastructure.exception.stock.CanNotFindStock
 import kr.co.kimga.order.infrastructure.repository.StockJpaRepository
@@ -25,6 +26,7 @@ class StockService(
             }
     }
 
+    @DistributedLock(key = "'stock:' + #productId")
     @Transactional
     fun decreaseInventory(productId: Long, quantity: Long) {
         val findStock = stockRepository.findStockByProductId(productId)
@@ -32,6 +34,7 @@ class StockService(
         findStock.decreaseInventory(quantity)
     }
 
+    @DistributedLock(key = "'stock:' + #productId")
     @Transactional
     fun restoreInventory(productId: Long, quantity: Long) {
         val findStock = stockRepository.findStockByProductId(productId)
@@ -39,6 +42,7 @@ class StockService(
         findStock.restoreInventory(quantity)
     }
 
+    @DistributedLock(key = "'stock:' + #productId")
     @Transactional
     fun applyInventory(productId: Long, quantity: Long) {
         val findStock = stockRepository.findStockByProductId(productId)
