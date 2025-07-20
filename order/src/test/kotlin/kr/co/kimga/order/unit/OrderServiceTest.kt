@@ -23,7 +23,6 @@ import kr.co.kimga.order.infrastructure.service.order.dto.RequestFindOrdersDto
 import kr.co.kimga.order.infrastructure.service.payment.enums.PaymentProvider
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertNotNull
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.data.domain.PageImpl
@@ -33,6 +32,7 @@ import java.time.temporal.ChronoUnit
 import java.util.*
 import kotlin.math.floor
 import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
 
 
 @ExtendWith(MockKExtension::class)

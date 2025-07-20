@@ -3,8 +3,8 @@ package kr.co.kimga.member.unit
 import kr.co.kimga.member.infrastructure.common.Utils
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertNotNull
 import kotlin.test.assertNotEquals
+import kotlin.test.assertNotNull
 
 class UtilsTest {
 

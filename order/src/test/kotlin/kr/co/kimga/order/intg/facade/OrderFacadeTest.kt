@@ -1,5 +1,6 @@
 package kr.co.kimga.order.intg.facade
 
+import kr.co.kimga.member.intg.config.RedisTestConfig
 import kr.co.kimga.order.application.order.OrderFacade
 import kr.co.kimga.order.domain.entity.order.enums.OrderStatus
 import kr.co.kimga.order.domain.entity.order.enums.PayMethod
@@ -20,11 +21,12 @@ import java.time.Instant
 import kotlin.math.floor
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
 
 @SpringBootTest
 @Import(MockPaymentProcessorConfig::class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class OrderFacadeTest {
+class OrderFacadeTest: RedisTestConfig() {
 
     @Autowired
     private lateinit var orderFacade: OrderFacade
