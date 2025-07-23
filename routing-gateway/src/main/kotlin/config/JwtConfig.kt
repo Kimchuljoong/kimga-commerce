@@ -1,16 +1,20 @@
 package kr.co.kimga.routingGateway.config
 
-import org.springframework.boot.context.properties.ConfigurationProperties
+import kr.co.kimga.routingGateway.provider.JwtProvider
+import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-@ConfigurationProperties(prefix = "jwt")
-class JwtConfig {
-    var access = JwtSecretConfig()
-    var refresh = JwtSecretConfig()
+@EnableConfigurationProperties(JwtSecret::class)
+class JwtConfig(
+    private val jwtSecret: JwtSecret
+) {
 
-    class JwtSecretConfig {
-        var secret: String = ""
-        var exp: Long = 0
+    fun jwtAccessProvider(): JwtProvider {
+        return JwtProvider(secret = jwtSecret.access.secret)
+    }
+
+    fun jwtRefreshProvider(): JwtProvider {
+        return JwtProvider(secret = jwtSecret.refresh.secret)
     }
 }

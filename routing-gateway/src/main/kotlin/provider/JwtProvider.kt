@@ -1,16 +1,12 @@
-package kr.co.kimga.routingGateway.util
+package kr.co.kimga.routingGateway.provider
 
 import io.jsonwebtoken.Claims
-import io.jsonwebtoken.ExpiredJwtException
-import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
-import java.time.LocalDateTime
-import javax.crypto.SecretKey
 
-class JwtUtil(secret: String) {
+class JwtProvider(secret: String) {
 
-    private val secretKey: SecretKey = Keys.hmacShaKeyFor(secret.toByteArray())
+    private val secretKey = Keys.hmacShaKeyFor(secret.toByteArray())
 
     fun validateToken(token: String): Boolean {
         return try {
