@@ -2,35 +2,58 @@ package kr.co.kimga.routingGateway.filter
 
 import kr.co.kimga.routingGateway.provider.JwtProvider
 import org.springframework.beans.factory.annotation.Qualifier
-import org.springframework.cloud.gateway.filter.GatewayFilter
-import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory
+import org.springframework.cloud.gateway.filter.GatewayFilterChain
+import org.springframework.cloud.gateway.filter.GlobalFilter
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
+import org.springframework.http.server.reactive.ServerHttpRequest
 import org.springframework.stereotype.Component
+import org.springframework.web.server.ServerWebExchange
+import reactor.core.publisher.Mono
 
 @Component
 class JwtAuthFilter(
     @Qualifier("jwtAccessProvider")
     private val jwtAccessProvider: JwtProvider
-): AbstractGatewayFilterFactory<Any>(Any::class.java) {
+): GlobalFilter {
 
-    override fun apply(config: Any?): GatewayFilter {
-        return GatewayFilter { exchange, chain ->
-            val request = exchange.request
-            val token = request.headers.getFirst(HttpHeaders.AUTHORIZATION)?.removePrefix("Bearer ")
+    private val whiteListPaths = emptyList<String>()
 
-            if (token.isNullOrBlank()) {
-                exchange.response.statusCode = HttpStatus.UNAUTHORIZED
-                return@GatewayFilter exchange.response.setComplete()
-            }
+    override fun filter(exchange: ServerWebExchange, chain: GatewayFilterChain): Mono<Void> {
+        val path = exchange.request.path.toString()
 
-            try {
-                jwtAccessProvider.validateToken(token)
-                chain.filter(exchange)
-            } catch (e: Exception) {
-                exchange.response.statusCode = HttpStatus.UNAUTHORIZED
-                exchange.response.setComplete()
-            }
+        return when {
+            isWhitelisted(path) -> chain.filter(exchange)
+            else -> authenticate(exchange, chain)
         }
+    }
+
+    private fun isWhitelisted(path: String) = whiteListPaths.any { path.startsWith(it) }
+
+    private fun authenticate(exchange: ServerWebExchange, chain: GatewayFilterChain): Mono<Void> {
+
+        val token = extractToken(exchange.request)
+
+        if (token.isNullOrBlank()) {
+            return unauthorized(exchange)
+        }
+
+        return try {
+            jwtAccessProvider.validateToken(token)
+            chain.filter(exchange)
+        } catch (e: Exception) {
+            unauthorized(exchange)
+        }
+    }
+
+    private fun extractToken(request: ServerHttpRequest) =
+        request.headers.getFirst(HttpHeaders.AUTHORIZATION)
+            ?.removePrefix("Bearer ")
+            ?.trim()
+
+
+    private fun unauthorized(exchange: ServerWebExchange): Mono<Void> {
+        exchange.response.statusCode = HttpStatus.UNAUTHORIZED
+        return exchange.response.setComplete()
     }
 }
