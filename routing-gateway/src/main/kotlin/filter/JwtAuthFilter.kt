@@ -31,29 +31,21 @@ class JwtAuthFilter(
     private fun isWhitelisted(path: String) = whiteListPaths.any { path.startsWith(it) }
 
     private fun authenticate(exchange: ServerWebExchange, chain: GatewayFilterChain): Mono<Void> {
-
         val token = extractToken(exchange.request)
+            ?.takeIf { it.isNotBlank() }
+            ?: return unauthorized(exchange)
 
-        if (token.isNullOrBlank()) {
-            return unauthorized(exchange)
-        }
-
-        return try {
-            jwtAccessProvider.validateToken(token)
+        return if (jwtAccessProvider.validateToken(token)) {
             chain.filter(exchange)
-        } catch (e: Exception) {
+        } else {
             unauthorized(exchange)
         }
     }
 
-    private fun extractToken(request: ServerHttpRequest) =
-        request.headers.getFirst(HttpHeaders.AUTHORIZATION)
-            ?.removePrefix("Bearer ")
-            ?.trim()
+    private fun extractToken(request: ServerHttpRequest) = request.headers.getFirst(HttpHeaders.AUTHORIZATION)?.removePrefix("Bearer ")?.trim()
 
-
-    private fun unauthorized(exchange: ServerWebExchange): Mono<Void> {
-        exchange.response.statusCode = HttpStatus.UNAUTHORIZED
-        return exchange.response.setComplete()
-    }
+    private fun unauthorized(exchange: ServerWebExchange): Mono<Void> =
+        exchange.response.apply {
+            statusCode = HttpStatus.UNAUTHORIZED
+        }.setComplete()
 }
