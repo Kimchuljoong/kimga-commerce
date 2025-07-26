@@ -11,6 +11,5 @@ class JwtSecret {
 
     class JwtSecretConfig {
         var secret: String = ""
-        var exp: Long = 0
     }
 }
