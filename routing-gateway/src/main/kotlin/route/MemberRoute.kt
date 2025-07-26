@@ -4,11 +4,11 @@ import org.springframework.cloud.gateway.route.builder.RouteLocatorDsl
 import org.springframework.stereotype.Component
 
 @Component
-class OrderRoute: RouteConfig {
+class MemberRoute: RouteConfig {
     override fun route(builder: RouteLocatorDsl) {
-        builder.route("order-service") {
-            path("/api/orders/**")
-            uri("http://localhost:8082")
+        builder.route("member-service") {
+            path("/api/member/**")
+            uri("http://localhost:8084")
         }
     }
 }
