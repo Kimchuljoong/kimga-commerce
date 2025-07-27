@@ -1,4 +1,4 @@
-package kr.co.kimga.routingGateway
+package kr.co.kimga.routingGateway.kr.co.kimga.routingGateway
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication

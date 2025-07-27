@@ -2,7 +2,6 @@ package kr.co.kimga.routingGateway.route
 
 import org.springframework.cloud.gateway.route.RouteLocator
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder
-import org.springframework.cloud.gateway.route.builder.routes
 import org.springframework.context.annotation.Bean
 import org.springframework.stereotype.Component
 
@@ -12,8 +11,8 @@ class RouteApplyConfig(
 ) {
 
     @Bean
-    fun routeConfig(builder: RouteLocatorBuilder): RouteLocator = builder.routes {
-        routeConfigs.forEach { it.route(this) }
-    }
-
+    fun routeConfig(builder: RouteLocatorBuilder): RouteLocator =
+        builder.routes().apply {
+            routeConfigs.forEach { r -> r.route(this) }
+        }.build()
 }

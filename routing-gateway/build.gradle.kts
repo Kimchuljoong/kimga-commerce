@@ -1,7 +1,6 @@
 
 dependencies {
     implementation("org.springframework.cloud:spring-cloud-starter-gateway")
-    implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
     implementation("io.jsonwebtoken:jjwt-api:0.12.6")
