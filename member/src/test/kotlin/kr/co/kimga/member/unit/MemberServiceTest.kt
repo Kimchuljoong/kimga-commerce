@@ -13,6 +13,7 @@ import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.*
 import java.util.*
 import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
 
 class MemberServiceTest{
 

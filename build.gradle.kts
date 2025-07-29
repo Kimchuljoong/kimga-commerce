@@ -1,9 +1,8 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
 	kotlin("jvm") version "1.9.25"
 	kotlin("plugin.spring") version "1.9.25"
-	id("org.springframework.boot") version "3.5.0"
+	id("org.springframework.boot") version "3.3.0"
 	id("io.spring.dependency-management") version "1.1.7"
 	kotlin("plugin.jpa") version "1.9.25" apply false
 }
@@ -36,12 +35,18 @@ subprojects {
 		}
 	}
 
+	dependencyManagement {
+		imports {
+			mavenBom("org.springframework.cloud:spring-cloud-dependencies:2023.0.1")
+		}
+	}
+
 	dependencies {
 		implementation("org.springframework.boot:spring-boot-starter-data-redis")
 		implementation("org.springframework.boot:spring-boot-starter-validation")
 		implementation("org.jetbrains.kotlin:kotlin-reflect")
 		implementation("org.springframework.kafka:spring-kafka")
-		implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0")
+		implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0")
 		compileOnly("org.projectlombok:lombok")
 		annotationProcessor("org.projectlombok:lombok")
 		testImplementation("io.mockk:mockk:1.13.10")

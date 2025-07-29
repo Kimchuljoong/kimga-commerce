@@ -6,7 +6,6 @@ import org.testcontainers.containers.GenericContainer
 import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
 
-
 @Testcontainers
 abstract class RedisTestConfig {
     companion object {
@@ -26,4 +25,3 @@ object RedisContainer {
         .withReuse(true)
         .apply { start() }
 }
-

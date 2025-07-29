@@ -1,6 +1,7 @@
 package kr.co.kimga.order.intg.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import kr.co.kimga.member.intg.config.RedisTestConfig
 import kr.co.kimga.order.domain.entity.order.enums.OrderStatus
 import kr.co.kimga.order.domain.entity.order.enums.PayMethod
 import kr.co.kimga.order.domain.entity.stock.Stock
@@ -23,7 +24,7 @@ import kotlin.math.floor
 @AutoConfigureMockMvc
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class OrderControllerV1Test {
+class OrderControllerV1Test: RedisTestConfig() {
 
     @Autowired
     private lateinit var mockMvc: MockMvc

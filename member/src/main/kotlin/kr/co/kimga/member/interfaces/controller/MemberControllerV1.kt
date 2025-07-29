@@ -28,7 +28,7 @@ class MemberControllerV1(
         ApiResponse(responseCode = "409", description = "이미 생성된 회원 정보"),
         ApiResponse(responseCode = "500", description = "내부 서버 오류")
     )
-    @PostMapping("")
+    @PostMapping("/new")
     @ResponseStatus(HttpStatus.CREATED)
     fun create(@Valid @RequestBody memberCreateRequestDto: MemberCreateRequestDto) =
         memberFacade.join(JoinRequestDto(

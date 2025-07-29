@@ -1,0 +1,10 @@
+
+spring:
+  application:
+    name: routing-gateway
+
+jwt:
+  access:
+    secret: Z87UeL+XGqVoONEFIm5toKLN/Pzx88eLxb9rR77vm5A=
+  refresh:
+    secret: CPDzpOnBkn0lQUTL+by+byB7MybX7vuBHqaljVkkAF0=

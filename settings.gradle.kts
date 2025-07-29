@@ -8,5 +8,6 @@ include(
     "member",
     "order",
     "coupon",
-    "product"
+    "product",
+    "routing-gateway"
 )
