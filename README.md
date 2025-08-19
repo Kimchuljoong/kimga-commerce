@@ -1,17 +1,43 @@
-## Kimga E-Commerce Order Service
+# Kimga Commerce
 
-### 모듈
-1. member(회원) Complete
-2. product(상품) Complete
-3. account (구좌) Complete
-4. order(주문) Complete
-5. coupon(쿠폰) Todo
-6. common(공통) Todo
-7. db(데이터베이스) Complete
+**커머스 시스템 데모 프로젝트**로, 전자상거래 서비스의 핵심 도메인을 중심으로 만들어졌습니다
+주요 도메인은 **주문(Order), 고객(Member), 상품(Product)** 입니다  
+
 ---
 
-### 기술 스택
+## **기술 스택**
 - Kotlin
-- SpringBoot
+- Spring Boot
 - JPA
 - Redis
+- Gradle (Multi-Module Project)
+
+---
+
+## **프로젝트 구조**
+본 프로젝트는 **멀티 모듈 구조**로 설계되어, 각 도메인을 독립적으로 구성
+
+- **order**: 주문 도메인
+- **member**: 고객 도메인
+- **product**: 상품 도메인
+- **db**: 데이터베이스 관련 모듈
+
+---
+
+## **주요 기능**
+1. **주문(Order/Stock)**  
+   - 상품을 기반으로 주문 생성 / 취소  
+   - 주문 정보 조회
+   - 재고 관리
+
+2. **고객(Member)**  
+   - 고객 정보 관리
+
+3. **상품(Product)**  
+   - 상품 등록 및 조회  
+
+---
+
+## **향후 계획**
+쿠폰 모듈 개발: 할인 정책 및 쿠폰 발급/적용 기능 추가
+Kafka 연동: 주문 및 결제 이벤트 기반 아키텍처 적용
