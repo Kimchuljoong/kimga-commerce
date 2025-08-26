@@ -4,3 +4,14 @@ services:
     image: redis:7.4.4
     ports:
       - "6379:6379"
+
+  mysql:
+    container_name: kimga-mysql
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: kimga_db
+      MYSQL_USER: kimga
+      MYSQL_PASSWORD: kimga1234
+    ports:
+      - "3307:3306"

@@ -1,11 +1,9 @@
-
 server:
-    port: 8081
+  port: 8082
 
 spring:
-
   application:
-    name: member
+    name: product
 
   datasource:
     url: jdbc:mysql://localhost:3307/kimga_db?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
@@ -20,16 +18,3 @@ spring:
     properties:
       hibernate:
         format_sql: true
-
-  data:
-    redis:
-      host: localhost
-      port: 6379
-
-jwt:
-  access:
-    secret: Z87UeL+XGqVoONEFIm5toKLN/Pzx88eLxb9rR77vm5A=
-    exp: 3600 # 1시간
-  refresh:
-    secret: CPDzpOnBkn0lQUTL+by+byB7MybX7vuBHqaljVkkAF0=
-    exp: 86400 # 24시간
