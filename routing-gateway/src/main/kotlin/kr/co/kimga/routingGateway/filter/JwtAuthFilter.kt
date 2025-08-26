@@ -19,7 +19,7 @@ class JwtAuthFilter(
     private val jwtAccessProvider: JwtProvider
 ): GlobalFilter {
 
-    private val whiteListPaths = emptyList<String>()
+    private val whiteListPaths = listOf("/api/v1/member/new", "/api/v1/auth/login")
 
     override fun filter(exchange: ServerWebExchange, chain: GatewayFilterChain): Mono<Void> {
         val path = exchange.request.path.toString()

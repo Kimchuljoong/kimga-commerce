@@ -1,24 +1,16 @@
 server:
-  port: 8083
+  port: 8082
 
 spring:
-  profiles:
-    active: local
-
   application:
-    name: order
-
+    name: product
   datasource:
     driver-class-name: org.h2.Driver
     url: jdbc:h2:mem:testdb
     username: sa
     password:
-
-  data:
-    redis:
-      host: localhost
-      port: 6379
-
   h2:
     console:
       enabled: true
+  profiles:
+    active: test
