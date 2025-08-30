@@ -6,6 +6,7 @@ import kr.co.kimga.order.infrastructure.service.order.dto.FindOrderDetailsDto
 import kr.co.kimga.order.infrastructure.service.order.dto.FindOrderDto
 import kr.co.kimga.order.infrastructure.service.order.dto.RequestCreateOrderDto
 import kr.co.kimga.order.infrastructure.service.order.dto.RequestFindOrdersDto
+import kr.co.kimga.order.infrastructure.service.payment.PaymentDomainService
 import kr.co.kimga.order.infrastructure.service.payment.PaymentService
 import kr.co.kimga.order.infrastructure.service.payment.dto.RequestCancelPayment
 import kr.co.kimga.order.infrastructure.service.payment.dto.RequestPayment
@@ -25,79 +26,33 @@ import org.springframework.transaction.annotation.Transactional
 @RequiredArgsConstructor
 class OrderFacade(
     private val orderService: OrderService,
-    private val paymentService: PaymentService,
-    private val stockService: StockService
+    private val paymentDomainService: PaymentDomainService,
+    val stockService: StockService
 ) {
 
     @Transactional
     fun createOrder(requestCreateOrderDto: RequestCreateOrderDto): Long {
-        requestCreateOrderDto.orderItems.forEach{
-            stockService.decreaseInventory(it.productId, it.quantity)
-        }
-
+        decreaseStocks(requestCreateOrderDto)
         val orderId = orderService.createOrder(requestCreateOrderDto)
-
-        requestCreateOrderDto.orderPays.forEach {
-            val requestPayment = RequestPayment(
-                provider = PaymentProvider.valueOf(it.provider),
-                paymentType = PaymentType.valueOf(it.payMethod.value),
-                orderId = orderId,
-                amount = it.amount
-            )
-            val paymentResult = paymentService.makePayment(requestPayment)
-            val requestSavePaymentResult = RequestSavePaymentResult(
-                result = paymentResult.result,
-                actionType = ActionType.PAYMENT,
-                provider = PaymentProvider.valueOf(it.provider),
-                paymentType = requestPayment.paymentType,
-                transactionId = paymentResult.transactionId,
-                orderId = requestPayment.orderId,
-                amount = requestPayment.amount,
-                approvedAt = paymentResult.approvedAt
-            )
-            paymentService.savePaymentResult(requestSavePaymentResult)
-            val mappedResult = paymentResult.mappedResult
-
-            when(mappedResult) {
-                PaymentProcessResult.PAID -> orderService.updateOrderPaySucceed(orderId, it.payMethod)
-                else -> {}
-            }
-        }
-
+        paymentDomainService.processPayments(orderId, requestCreateOrderDto.orderPays)
         orderService.completePaymentForOrder(orderId)
-
         return orderId
+    }
+
+    private fun decreaseStocks(requestCreateOrderDto: RequestCreateOrderDto) {
+        requestCreateOrderDto.orderItems.forEach { stockService.decreaseInventory(it.productId, it.quantity) }
     }
 
     @Transactional
     fun cancelOrder(orderId: Long) {
-
         orderService.cancelAble(orderId)
+        paymentDomainService.cancelPayments(orderId)
+        orderService.cancelOrder(orderId)
+        restoreStocks(orderId)
+    }
 
-        paymentService.findOrderTransactions(orderId).forEach {
-            val requestCancelPayment = RequestCancelPayment(
-                orderId = it.orderId,
-                provider = it.provider,
-                paymentType = it.paymentType,
-                amount = it.amount
-            )
-            val paymentResult = paymentService.cancelPayment(requestCancelPayment)
-            val requestSavePaymentResult = RequestSavePaymentResult(
-                result = paymentResult.result,
-                actionType = ActionType.PAYMENT,
-                provider = it.provider,
-                paymentType = it.paymentType,
-                transactionId = paymentResult.transactionId,
-                orderId = it.orderId,
-                amount = it.amount,
-                approvedAt = paymentResult.approvedAt
-            )
-            paymentService.savePaymentResult(requestSavePaymentResult)
-            orderService.updateOrderPayRefund(orderId, PayMethod.valueOf(it.paymentType.value))
-        }
-
+    private fun restoreStocks(orderId: Long) {
         orderService.findOrderDetails(orderId).let { it ->
-            orderService.cancelOrder(it.orderId)
             it.items.forEach {
                 stockService.restoreInventory(it.productId, it.quantity)
             }
@@ -112,7 +67,7 @@ class OrderFacade(
     }
 
     fun findOrderDetails(orderId: Long): FindOrderDetailsDto {
-        return  orderService.findOrderDetails(orderId)
+        return orderService.findOrderDetails(orderId)
     }
 
     fun completeDelivery(orderId: Long) {
