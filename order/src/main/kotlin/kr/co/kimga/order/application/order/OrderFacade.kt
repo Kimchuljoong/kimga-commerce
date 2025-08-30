@@ -1,20 +1,11 @@
 package kr.co.kimga.order.application.order
 
-import kr.co.kimga.order.domain.entity.order.enums.PayMethod
 import kr.co.kimga.order.infrastructure.service.order.OrderService
 import kr.co.kimga.order.infrastructure.service.order.dto.FindOrderDetailsDto
 import kr.co.kimga.order.infrastructure.service.order.dto.FindOrderDto
 import kr.co.kimga.order.infrastructure.service.order.dto.RequestCreateOrderDto
 import kr.co.kimga.order.infrastructure.service.order.dto.RequestFindOrdersDto
 import kr.co.kimga.order.infrastructure.service.payment.PaymentDomainService
-import kr.co.kimga.order.infrastructure.service.payment.PaymentService
-import kr.co.kimga.order.infrastructure.service.payment.dto.RequestCancelPayment
-import kr.co.kimga.order.infrastructure.service.payment.dto.RequestPayment
-import kr.co.kimga.order.infrastructure.service.payment.dto.RequestSavePaymentResult
-import kr.co.kimga.order.infrastructure.service.payment.enums.ActionType
-import kr.co.kimga.order.infrastructure.service.payment.enums.PaymentProcessResult
-import kr.co.kimga.order.infrastructure.service.payment.enums.PaymentProvider
-import kr.co.kimga.order.infrastructure.service.payment.enums.PaymentType
 import kr.co.kimga.order.infrastructure.service.stock.StockService
 import lombok.RequiredArgsConstructor
 import org.springframework.data.domain.Page
