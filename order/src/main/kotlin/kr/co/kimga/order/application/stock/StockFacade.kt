@@ -1,6 +1,5 @@
 package kr.co.kimga.order.application.stock
 
-import kr.co.kimga.order.domain.entity.stock.Stock
 import kr.co.kimga.order.infrastructure.service.stock.StockService
 import kr.co.kimga.order.infrastructure.service.stock.dto.RequestCreateStockDto
 import org.springframework.stereotype.Service
