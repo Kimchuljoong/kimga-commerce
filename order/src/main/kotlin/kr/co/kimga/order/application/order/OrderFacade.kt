@@ -31,7 +31,7 @@ class OrderFacade(
     }
 
     private fun decreaseStocks(requestCreateOrderDto: RequestCreateOrderDto) {
-        requestCreateOrderDto.orderItems.forEach { stockService.decreaseInventory(it.productId, it.quantity) }
+        requestCreateOrderDto.orderItems.forEach { stockService.decrease(it.productId, it.quantity) }
     }
 
     @Transactional
@@ -45,7 +45,7 @@ class OrderFacade(
     private fun restoreStocks(orderId: Long) {
         orderService.findOrderDetails(orderId).let { it ->
             it.items.forEach {
-                stockService.restoreInventory(it.productId, it.quantity)
+                stockService.restore(it.productId, it.quantity)
             }
         }
     }

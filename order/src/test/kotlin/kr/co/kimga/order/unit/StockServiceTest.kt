@@ -74,7 +74,7 @@ class StockServiceTest {
         } returns fakeStock
 
         // when
-        stockService.decreaseInventory(productId, quantity)
+        stockService.decrease(productId, quantity)
 
         // then
         assertEquals(totalQuantity - quantity, fakeStock.getAvailableInventory())
@@ -101,7 +101,7 @@ class StockServiceTest {
         } returns fakeStock
 
         // when
-        stockService.restoreInventory(productId, quantity)
+        stockService.restore(productId, quantity)
 
         // then
         assertEquals(quantity, fakeStock.getAvailableInventory())
@@ -128,7 +128,7 @@ class StockServiceTest {
         } returns fakeStock
 
         // when
-        stockService.applyInventory(productId, quantity)
+        stockService.apply(productId, quantity)
 
         // then
         assertEquals(quantity, fakeStock.getAvailableInventory())

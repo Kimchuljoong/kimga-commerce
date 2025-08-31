@@ -1,17 +1,19 @@
-package kr.co.kimga.order.interfaces.exception
+package kr.co.kimga.order.interfaces.exception.handler
 
 import io.swagger.v3.oas.annotations.Hidden
 import kr.co.kimga.order.infrastructure.exception.order.CanNotCancelOrderException
 import kr.co.kimga.order.infrastructure.exception.order.CanNotFindOrder
 import kr.co.kimga.order.infrastructure.exception.order.TransactionFailException
+import kr.co.kimga.order.interfaces.controller.order.OrderApiV1
+import kr.co.kimga.order.interfaces.exception.ExceptionResponse
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestControllerAdvice
 
 @Hidden
-@RestControllerAdvice
-class GlobalExceptionHandler {
+@RestControllerAdvice(assignableTypes = [OrderApiV1::class])
+class OrderExceptionHandler {
 
     @ExceptionHandler(CanNotFindOrder::class)
     @ResponseStatus(HttpStatus.NOT_FOUND)

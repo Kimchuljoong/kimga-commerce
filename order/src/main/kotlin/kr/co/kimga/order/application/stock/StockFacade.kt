@@ -13,7 +13,7 @@ class StockFacade(
     @Transactional
     fun applyStock(requestCreateStockDto: RequestCreateStockDto) {
         stockService.createStock(requestCreateStockDto)
-        stockService.applyInventory(requestCreateStockDto.productId, requestCreateStockDto.stock)
+        stockService.apply(requestCreateStockDto.productId, requestCreateStockDto.stock)
     }
 
     fun findStock(productId: Long): Long {
