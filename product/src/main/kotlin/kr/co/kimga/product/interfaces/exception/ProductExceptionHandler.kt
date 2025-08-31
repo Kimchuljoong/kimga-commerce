@@ -1,15 +1,18 @@
 package kr.co.kimga.product.interfaces.exception
 
+import io.swagger.v3.oas.annotations.Hidden
 import kr.co.kimga.product.domain.exception.PriceCanNotChangeException
 import kr.co.kimga.product.domain.exception.ProductNotFoundException
 import kr.co.kimga.product.domain.exception.ProductStatusCanNotChangeException
+import kr.co.kimga.product.interfaces.controller.ProductApiV1
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestControllerAdvice
 
-@RestControllerAdvice
-class GlobalExceptionHandler {
+@Hidden
+@RestControllerAdvice(assignableTypes = [ProductApiV1::class])
+class ProductExceptionHandler {
 
     @ExceptionHandler(RuntimeException::class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
