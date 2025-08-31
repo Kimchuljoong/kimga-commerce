@@ -56,9 +56,11 @@ class OrderService(
         if (order.orderPays.isEmpty())
             throw CanNotFoundOrderPayException()
 
-        if (order.orderPays.all { it.status == PayStatus.SUCCEED }) {
-            order.completePaid()
+        val allSucceed = order.orderPays.all {
+            it.payMethod == PayMethod.CARD && it.status == PayStatus.SUCCEED
         }
+
+        if (allSucceed) order.completePaid()
     }
 
     @Transactional

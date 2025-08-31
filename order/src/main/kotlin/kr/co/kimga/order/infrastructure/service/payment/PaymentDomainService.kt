@@ -26,7 +26,9 @@ class PaymentDomainService(
             orderPays.forEach { payDto ->
                 val paymentResult = makePayment(orderId, payDto)
 
-                if (paymentResult.mappedResult == PaymentProcessResult.PAID) {
+                print(paymentResult.mappedResult)
+
+                if (paymentResult.mappedResult in listOf(PaymentProcessResult.PAID, PaymentProcessResult.ACCOUNT)) {
                     orderService.updateOrderPaySucceed(orderId, payDto.payMethod)
                     successPayments.add(payDto)
                 } else {
