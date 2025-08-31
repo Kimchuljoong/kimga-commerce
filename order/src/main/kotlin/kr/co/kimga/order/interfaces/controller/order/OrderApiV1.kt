@@ -27,6 +27,7 @@ interface OrderApiV1 {
                 schema = Schema(implementation = Long::class)
             )]
         ),
+        ApiResponse(responseCode = "", description = "내부 서버 오류"),
         ApiResponse(responseCode = "500", description = "내부 서버 오류")
     )
     @PostMapping
