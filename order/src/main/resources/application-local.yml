@@ -22,3 +22,6 @@ spring:
   h2:
     console:
       enabled: true
+
+product-service:
+  url: http://localhost:8082

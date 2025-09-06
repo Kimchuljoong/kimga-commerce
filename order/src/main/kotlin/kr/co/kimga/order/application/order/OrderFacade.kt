@@ -23,11 +23,16 @@ class OrderFacade(
 
     @Transactional
     fun createOrder(requestCreateOrderDto: RequestCreateOrderDto): Long {
+        productsSaleable(requestCreateOrderDto)
         decreaseStocks(requestCreateOrderDto)
         val orderId = orderService.createOrder(requestCreateOrderDto)
         paymentDomainService.processPayments(orderId, requestCreateOrderDto.orderPays)
         orderService.completePaymentForOrder(orderId)
         return orderId
+    }
+
+    private fun productsSaleable(requestCreateOrderDto: RequestCreateOrderDto) {
+        requestCreateOrderDto.orderItems.forEach { orderService.isSaleAble(it.productId) }
     }
 
     private fun decreaseStocks(requestCreateOrderDto: RequestCreateOrderDto) {

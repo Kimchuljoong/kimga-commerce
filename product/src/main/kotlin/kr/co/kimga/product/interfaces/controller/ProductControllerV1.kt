@@ -87,9 +87,9 @@ class ProductControllerV1(
         ApiResponse(responseCode = "404", description = "상품 정보 미존재"),
         ApiResponse(responseCode = "500", description = "내부 서버 오류")
     )
-    @PostMapping("/{productId}/sale")
+    @PostMapping("/sale")
     fun saleProduct(
-        @PathVariable("productId") productId: Long
+        productId: Long
     ) = productFacade.saleProduct(productId)
 
     @Operation(summary = "상품 판매 중지 상태로 전환")
@@ -99,8 +99,19 @@ class ProductControllerV1(
         ApiResponse(responseCode = "404", description = "상품 정보 미존재"),
         ApiResponse(responseCode = "500", description = "내부 서버 오류")
     )
-    @PostMapping("/{productId}/close")
+    @PostMapping("/close")
     fun closeProduct(
-        @PathVariable("productId") productId: Long
+        productId: Long
     ) = productFacade.closeProduct(productId)
+
+    @Operation(summary = "상품 판매 상태 조회")
+    @ApiResponses(
+        ApiResponse(responseCode = "200", description = "판매 상태 정상 조회"),
+        ApiResponse(responseCode = "404", description = "상품 정보 미존재"),
+        ApiResponse(responseCode = "500", description = "내부 서버 오류")
+    )
+    @GetMapping("/status/{productId}")
+    fun getProductStatus(
+        @PathVariable("productId") productId: Long
+    ): ProductStatus = productFacade.getProductStatus(productId)
 }

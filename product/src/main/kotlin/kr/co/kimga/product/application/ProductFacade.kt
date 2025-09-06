@@ -31,4 +31,6 @@ class ProductFacade (
 
     @Transactional
     fun closeProduct(productId: Long) = productService.closeProduct(productId)
+
+    fun getProductStatus(productId: Long): ProductStatus = productService.getProductStatus(productId)
 }

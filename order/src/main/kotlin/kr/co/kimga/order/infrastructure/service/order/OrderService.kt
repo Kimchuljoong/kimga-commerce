@@ -1,11 +1,12 @@
 package kr.co.kimga.order.infrastructure.service.order
 
+import feign.FeignException
 import kr.co.kimga.order.domain.entity.order.Order
 import kr.co.kimga.order.domain.entity.order.enums.PayMethod
 import kr.co.kimga.order.domain.entity.order.enums.PayStatus
-import kr.co.kimga.order.infrastructure.exception.order.CanNotCancelOrderException
-import kr.co.kimga.order.infrastructure.exception.order.CanNotFindOrder
-import kr.co.kimga.order.infrastructure.exception.order.CanNotFoundOrderPayException
+import kr.co.kimga.order.infrastructure.exception.order.*
+import kr.co.kimga.order.infrastructure.feign.ProductClient
+import kr.co.kimga.order.infrastructure.feign.ProductStatus
 import kr.co.kimga.order.infrastructure.repository.OrderJpaRepository
 import kr.co.kimga.order.infrastructure.repository.OrderPayJpaRepository
 import kr.co.kimga.order.infrastructure.repository.OrderQuerydslRepository
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional
 
 @Service
 class OrderService(
+    private val productClient: ProductClient,
     private val orderRepository: OrderJpaRepository,
     private val orderQuerydslRepository: OrderQuerydslRepository,
     private val orderPayRepository: OrderPayJpaRepository
@@ -95,6 +97,17 @@ class OrderService(
     private fun findOrderPay(orderId: Long, payMethod: PayMethod) =
         orderPayRepository.findByOrderIdAndPayMethod(orderId, payMethod)
             ?: throw CanNotFoundOrderPayException()
+
+    fun isSaleAble(productId: Long) {
+        try {
+            val productStatus = productClient.getProductStatus(productId)
+            if (productStatus != ProductStatus.SALE) {
+                throw NotSaleable()
+            }
+        } catch (e: FeignException.NotFound) {
+            throw ProductNotFound()
+        }
+    }
 }
 
 private fun Order.toFindOrderDto(): FindOrderDto =
