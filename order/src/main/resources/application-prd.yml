@@ -24,3 +24,6 @@ spring:
     redis:
       host: localhost
       port: 6379
+
+product-service:
+  url: http://localhost:8082

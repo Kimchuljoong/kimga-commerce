@@ -58,4 +58,10 @@ class ProductService (
         findProduct.changeProductName(modifyProductDto.productName)
         findProduct.changePrice(modifyProductDto.price)
     }
+
+    fun getProductStatus(productId: Long): ProductStatus {
+        val findProduct =
+            productRepository.findById(productId).orElseThrow { throw ProductNotFoundException() }
+        return findProduct.productStatus
+    }
 }

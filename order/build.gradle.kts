@@ -38,6 +38,7 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.redisson:redisson-spring-boot-starter:3.23.2")
+    implementation("org.springframework.cloud:spring-cloud-starter-openfeign:4.0.6")
 
     implementation("com.querydsl:querydsl-jpa:5.1.0:jakarta")
 

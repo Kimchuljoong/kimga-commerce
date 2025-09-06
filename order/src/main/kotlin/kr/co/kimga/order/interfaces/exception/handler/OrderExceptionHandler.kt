@@ -1,9 +1,7 @@
 package kr.co.kimga.order.interfaces.exception.handler
 
 import io.swagger.v3.oas.annotations.Hidden
-import kr.co.kimga.order.infrastructure.exception.order.CanNotCancelOrderException
-import kr.co.kimga.order.infrastructure.exception.order.CanNotFindOrder
-import kr.co.kimga.order.infrastructure.exception.order.TransactionFailException
+import kr.co.kimga.order.infrastructure.exception.order.*
 import kr.co.kimga.order.interfaces.controller.order.OrderApiV1
 import kr.co.kimga.order.interfaces.exception.ExceptionResponse
 import org.springframework.http.HttpStatus
@@ -18,6 +16,14 @@ class OrderExceptionHandler {
     @ExceptionHandler(CanNotFindOrder::class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     fun handleNotFound(e: CanNotFindOrder): ExceptionResponse = e.message?.let { ExceptionResponse(it) } ?: ExceptionResponse()
+
+    @ExceptionHandler(NotSaleable::class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    fun handleNotSaleable(e: NotSaleable): ExceptionResponse = e.message?.let { ExceptionResponse(it) } ?: ExceptionResponse()
+
+    @ExceptionHandler(ProductNotFound::class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    fun handleProductNotFound(e: ProductNotFound): ExceptionResponse = e.message?.let { ExceptionResponse(it) } ?: ExceptionResponse()
 
     @ExceptionHandler(CanNotCancelOrderException::class)
     @ResponseStatus(HttpStatus.CONFLICT)

@@ -27,7 +27,8 @@ interface OrderApiV1 {
                 schema = Schema(implementation = Long::class)
             )]
         ),
-        ApiResponse(responseCode = "", description = "내부 서버 오류"),
+        ApiResponse(responseCode = "400", description = "상품이 판매중이 아님"),
+        ApiResponse(responseCode = "404", description = "상품을 찾을 수 없음"),
         ApiResponse(responseCode = "500", description = "내부 서버 오류")
     )
     @PostMapping
